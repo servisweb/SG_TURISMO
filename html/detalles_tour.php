@@ -184,6 +184,7 @@ $resenas = [
                                                         <p class="guide-availability">Disponibilidad: <?= htmlspecialchars($guide['disponibilidad']) ?></p>
                                                     </div>
                                                 </div>
+                                    
                                             </label>
                                         <?php endforeach; ?>
                                     <?php else: ?>
@@ -191,6 +192,9 @@ $resenas = [
                                     <?php endif; ?>
                                 </div>
                             </div>
+                             <a id="reserve-link" class="btn btn--primary btn-reserve" href="../views/reservar.php?tour_id=<?= $tour['id'] ?>&guide_id=0">
+                                <i class="fa-solid fa-calendar-check"></i> Reservar Ahora
+                            </a>
 
                             <!-- Modal: Servicios Guía Privado -->
                             <div id="guide-modal" class="modal" aria-hidden="true">
@@ -211,9 +215,6 @@ $resenas = [
                     </div>
                 </div>
 
-                            <a id="reserve-link" class="btn btn--primary btn-reserve" href="../views/reservar.php?tour_id=<?= $tour['id'] ?>&guide_id=0">
-                                <i class="fa-solid fa-calendar-check"></i> Reservar Ahora
-                            </a>
 
                             <p class="booking-notice">Para completar tu reserva, necesitarás iniciar sesión o registrarte.</p>
                         </div>
