@@ -25,7 +25,7 @@
             </ul>
         </nav>
         
-        <button class="btn btn--outline" aria-label="Iniciar sesión">
+        <button class="btn btn--outline" onclick="window.location.href='../views/login.php'" aria-label="Iniciar sesión">
             <i class="fa-solid fa-arrow-right-to-bracket" aria-hidden="true"></i> Login
         </button>
     </header>

@@ -1,6 +1,10 @@
 <?php
 session_start();
 
+$redirectTour = isset($_POST['tour_id']) ? (int)$_POST['tour_id'] : 0;
+$redirectGuide = isset($_POST['guide_id']) ? (int)$_POST['guide_id'] : 0;
+$redirectCantidad = isset($_POST['cantidad']) ? (int)$_POST['cantidad'] : 1;
+
 // Datos de ejemplo (en producción, esto vendría de la base de datos)
 // Para esta demo, usaremos un archivo JSON o variables de sesión
 
@@ -9,14 +13,30 @@ $password = isset($_POST['password']) ? $_POST['password'] : '';
 
 // Validar campos
 if (empty($email) || empty($password)) {
-    header('Location: ../views/login.php?error=empty');
+    $location = '../views/login.php?error=empty';
+    if ($redirectTour > 0) {
+        $location .= '&tour_id=' . $redirectTour . '&guide_id=' . $redirectGuide . '&cantidad=' . $redirectCantidad;
+    }
+    header('Location: ' . $location);
     exit;
 }
 
 // Simular verificación de usuario (en producción, esto consultaría la base de datos)
-// Para esta demo, aceptaremos cualquier email válido
 if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
-    header('Location: ../views/login.php?error=invalid');
+    $location = '../views/login.php?error=invalid';
+    if ($redirectTour > 0) {
+        $location .= '&tour_id=' . $redirectTour . '&guide_id=' . $redirectGuide . '&cantidad=' . $redirectCantidad;
+    }
+    header('Location: ' . $location);
+    exit;
+}
+
+if (strlen($password) < 6) {
+    $location = '../views/login.php?error=password_short';
+    if ($redirectTour > 0) {
+        $location .= '&tour_id=' . $redirectTour . '&guide_id=' . $redirectGuide . '&cantidad=' . $redirectCantidad;
+    }
+    header('Location: ' . $location);
     exit;
 }
 
@@ -25,8 +45,10 @@ $_SESSION['user_id'] = uniqid();
 $_SESSION['user_email'] = $email;
 $_SESSION['user_name'] = explode('@', $email)[0];
 
-// Redirigir a reserva o al tour específico
-$redirect = isset($_GET['redirect']) ? '?tour_id=' . $_GET['redirect'] : '';
+$redirect = '';
+if ($redirectTour > 0) {
+    $redirect = '?tour_id=' . $redirectTour . '&guide_id=' . $redirectGuide . '&cantidad=' . $redirectCantidad;
+}
 header('Location: ../views/reservar.php' . $redirect);
 exit;
 ?>

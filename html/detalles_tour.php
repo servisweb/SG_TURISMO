@@ -37,7 +37,7 @@ $resenas = [
             </ul>
         </nav>
         
-        <button class="btn btn--outline" onclick="window.location.href='../views/login.php'">
+        <button class="btn btn--outline" onclick="window.location.href='../views/login.php?tour_id=<?= $tour['id'] ?>'">
             <i class="fa-solid fa-arrow-right-to-bracket"></i> Login
         </button>
     </header>

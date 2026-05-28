@@ -1,10 +1,17 @@
 <?php
 session_start();
 
-// Si ya está logueado, redirigir al dashboard
+$redirectTourId = isset($_GET['tour_id']) ? (int)$_GET['tour_id'] : 0;
+$redirectGuideId = isset($_GET['guide_id']) ? (int)$_GET['guide_id'] : 0;
+$redirectCantidad = isset($_GET['cantidad']) ? (int)$_GET['cantidad'] : 1;
+
+// Si ya está logueado, redirigir al tour o a reserva
 if (isset($_SESSION['user_id'])) {
-    $redirect = isset($_GET['redirect']) ? '?redirect=' . $_GET['redirect'] : '';
-    header('Location: ../views/reservar.php' . $redirect);
+    $query = '';
+    if ($redirectTourId > 0) {
+        $query = '?tour_id=' . $redirectTourId . '&guide_id=' . $redirectGuideId . '&cantidad=' . $redirectCantidad;
+    }
+    header('Location: ../views/reservar.php' . $query);
     exit;
 }
 ?>
@@ -191,6 +198,9 @@ if (isset($_SESSION['user_id'])) {
             <?php endif; ?>
 
             <form action="../controladores/procesar_login.php" method="POST">
+                <input type="hidden" name="tour_id" value="<?= $redirectTourId ?>">
+                <input type="hidden" name="guide_id" value="<?= $redirectGuideId ?>">
+                <input type="hidden" name="cantidad" value="<?= $redirectCantidad ?>">
                 <div class="form-group">
                     <label for="email">Email</label>
                     <input type="email" id="email" name="email" required placeholder="tu@email.com">
@@ -220,6 +230,9 @@ if (isset($_SESSION['user_id'])) {
             <p>Únete a Tumbes Tours</p>
 
             <form action="../controladores/procesar_registro.php" method="POST">
+                <input type="hidden" name="tour_id" value="<?= $redirectTourId ?>">
+                <input type="hidden" name="guide_id" value="<?= $redirectGuideId ?>">
+                <input type="hidden" name="cantidad" value="<?= $redirectCantidad ?>">
                 <div class="form-group">
                     <label for="nombres">Nombres</label>
                     <input type="text" id="nombres" name="nombres" required placeholder="Juan">
