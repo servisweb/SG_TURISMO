@@ -167,7 +167,7 @@ if (isset($_SESSION['user_id'])) {
     <div class="auth-form-wrapper">
         <div class="auth-form" id="login-form">
             <div class="back-link">
-                <a href="index.php"><i class="fa-solid fa-arrow-left"></i> Volver</a>
+                <a href="..\index.php"><i class="fa-solid fa-arrow-left"></i> Volver</a>
             </div>
 
             <h2>Iniciar Sesión</h2>
@@ -223,7 +223,7 @@ if (isset($_SESSION['user_id'])) {
 
         <div class="auth-form" id="register-form" style="display: none;">
             <div class="back-link">
-                <a href="index.php"><i class="fa-solid fa-arrow-left"></i> Volver</a>
+                <a href="..\index.php"><i class="fa-solid fa-arrow-left"></i> Volver</a>
             </div>
 
             <h2>Crear Cuenta</h2>

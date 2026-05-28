@@ -1,5 +1,6 @@
 <?php
 session_start();
+require_once __DIR__ . '/../config/conexion.php';
 
 $redirectTour = isset($_POST['tour_id']) ? (int)$_POST['tour_id'] : 0;
 $redirectGuide = isset($_POST['guide_id']) ? (int)$_POST['guide_id'] : 0;
@@ -12,7 +13,7 @@ $telefono = isset($_POST['telefono']) ? trim($_POST['telefono']) : '';
 $password = isset($_POST['password']) ? $_POST['password'] : '';
 $confirm_password = isset($_POST['confirm_password']) ? $_POST['confirm_password'] : '';
 
-// Validar campos
+// Validar campos obligatorios
 if (empty($nombres) || empty($apellidos) || empty($email) || empty($password)) {
     $location = '../views/login.php?error=empty';
     if ($redirectTour > 0) {
@@ -52,16 +53,57 @@ if (strlen($password) < 6) {
     exit;
 }
 
-// Simular registro y autenticación automática
-$_SESSION['user_id'] = uniqid();
-$_SESSION['user_email'] = $email;
-$_SESSION['user_name'] = $nombres;
+// Verificar si el email ya existe
+$stmt = $conexion->prepare("SELECT id_usuario FROM usuarios WHERE email = ?");
+$stmt->bind_param("s", $email);
+$stmt->execute();
+$result = $stmt->get_result();
 
-if ($redirectTour > 0) {
-    header('Location: ../views/reservar.php?tour_id=' . $redirectTour . '&guide_id=' . $redirectGuide . '&cantidad=' . $redirectCantidad);
+if ($result->num_rows > 0) {
+    $location = '../views/login.php?error=email_exists';
+    if ($redirectTour > 0) {
+        $location .= '&tour_id=' . $redirectTour . '&guide_id=' . $redirectGuide . '&cantidad=' . $redirectCantidad;
+    }
+    header('Location: ' . $location);
+    exit;
+}
+$stmt->close();
+
+// Encriptar contraseña
+$password_hash = password_hash($password, PASSWORD_DEFAULT);
+
+// Generar número de documento temporal (DNI)
+$numero_documento = '00000000'; // En producción, esto debería ser capturado en el formulario
+
+// Insertar usuario en la base de datos
+$stmt = $conexion->prepare("INSERT INTO usuarios (tipo_documento, numero_documento, nombres, apellidos, email, telefono, password_hash, rol, estado) VALUES (?, ?, ?, ?, ?, ?, ?, 'Cliente', 'Activo')");
+$tipo_doc = 'DNI';
+$stmt->bind_param("sssssss", $tipo_doc, $numero_documento, $nombres, $apellidos, $email, $telefono, $password_hash);
+
+if (!$stmt->execute()) {
+    $location = '../views/login.php?error=registration_failed';
+    if ($redirectTour > 0) {
+        $location .= '&tour_id=' . $redirectTour . '&guide_id=' . $redirectGuide . '&cantidad=' . $redirectCantidad;
+    }
+    header('Location: ' . $location);
     exit;
 }
 
-header('Location: ../views/login.php?success=registered');
+$user_id = $stmt->insert_id;
+$stmt->close();
+$conexion->close();
+
+// Autenticación automática después del registro
+$_SESSION['user_id'] = $user_id;
+$_SESSION['user_email'] = $email;
+$_SESSION['user_name'] = $nombres . ' ' . $apellidos;
+$_SESSION['user_rol'] = 'Cliente';
+
+// Redirigir
+if ($redirectTour > 0) {
+    header('Location: ../views/reservar.php?tour_id=' . $redirectTour . '&guide_id=' . $redirectGuide . '&cantidad=' . $redirectCantidad);
+} else {
+    header('Location: ../index.php');
+}
 exit;
 ?>

@@ -1,48 +1,21 @@
-<?php include __DIR__ . '/../controladores/detalles_tour.php'; ?>
-<?php
-// Reseñas simuladas para la sección de 'Reseñas de Viajeros'
+<?php 
+$page_title = 'Detalles del Tour - Tumbes Tours';
+$page_description = 'Descubre todos los detalles de nuestro tour';
+$base_path = '';
+include __DIR__ . '/controladores/detalles_tour.php';
+if ($tour) {
+    $page_title = htmlspecialchars($tour['titulo']) . ' | Tumbes Tours';
+    $page_description = htmlspecialchars($tour['descripcion']);
+}
+include __DIR__ . '/includes/header.php';
+
+// Reseñas simuladas
 $resenas = [
     [ 'estrellas' => 5, 'nombre' => 'Lucía M.', 'fecha' => '2026-03-12', 'texto' => 'Excelente experiencia, el guía conocía muy bien la fauna y los horarios se cumplieron.' ],
     [ 'estrellas' => 4, 'nombre' => 'Andrés P.', 'fecha' => '2026-04-02', 'texto' => 'Buen tour y paisajes hermosos. Recomendable para familias.' ],
     [ 'estrellas' => 5, 'nombre' => 'María R.', 'fecha' => '2026-05-10', 'texto' => 'El servicio del guía privado fue excepcional.' ]
 ];
 ?>
-
-<!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title><?= $tour ? htmlspecialchars($tour['titulo']) : 'Tour no encontrado' ?> | Tumbes Tours</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <link rel="stylesheet" href="../css/estyle.css">
-</head>
-<body>
-
-    <!-- HEADER -->
-    <header class="site-header">
-        <div class="site-header__brand">
-            <img src="https://via.placeholder.com/50" alt="Logotipo de Tumbes Tours" class="site-header__logo">
-            <div class="site-header__titles">
-                <h1>Tumbes Tours</h1>
-                <p>Descubre el paraíso del norte</p>
-            </div>
-        </div>
-        
-        <nav class="site-header__nav" aria-label="Navegación principal">
-            <ul>
-                <li><a href="index.php#paquetes">Paquetes</a></li>
-                <li><a href="index.php#sobre-nosotros">Sobre Nosotros</a></li>
-                <li><a href="index.php#contacto">Contacto</a></li>
-            </ul>
-        </nav>
-        
-        <button class="btn btn--outline" onclick="window.location.href='../views/login.php?tour_id=<?= $tour['id'] ?>'">
-            <i class="fa-solid fa-arrow-right-to-bracket"></i> Login
-        </button>
-    </header>
-
-    <main>
         <?php if ($tour): ?>
             <!-- HERO DEL TOUR -->
             <section class="tour-hero">
@@ -193,7 +166,7 @@ $resenas = [
                                     <?php endif; ?>
                                 </div>
                             </div>
-                             <a id="reserve-link" class="btn btn--primary btn-reserve" href="../views/reservar.php?tour_id=<?= $tour['id'] ?>&guide_id=0">
+                             <a id="reserve-link" class="btn btn--primary btn-reserve" href="views/reservar.php?tour_id=<?= $tour['id'] ?>&guide_id=0">
                                 <i class="fa-solid fa-calendar-check"></i> Reservar Ahora
                             </a>
 
@@ -234,16 +207,7 @@ $resenas = [
             </section>
         <?php endif; ?>
 
-    </main>
-
-    <footer class="site-footer">
-        <p>&copy; 2026 Tumbes Tours. Todos los derechos reservados.</p>
-        <div class="footer-social">
-            <i class="fa-brands fa-facebook"></i>
-            <i class="fa-brands fa-instagram"></i>
-            <i class="fa-brands fa-whatsapp"></i>
-        </div>
-    </footer>
+<?php include __DIR__ . '/includes/footer.php'; ?>
 
     <script>
         const basePrice = <?= number_format($tour['precio_persona'], 2, '.', '') ?>;
@@ -289,7 +253,7 @@ $resenas = [
             const groupPackages = Math.floor(count / 4);
             const individuals = count % 4;
             const tourCost = (groupPackages * priceGrupo) + (individuals * pricePersona);
-            const guideCost = guideExtra; // tarifa fija por grupo
+            const guideCost = guideExtra;
             return tourCost + guideCost;
         }
 
@@ -312,12 +276,11 @@ $resenas = [
 
             const guideId = getSelectedGuideId();
             const count = getPersonCount();
-            const baseUrl = '../views/reservar.php?tour_id=<?= $tour['id'] ?>';
+            const baseUrl = 'views/reservar.php?tour_id=<?= $tour['id'] ?>';
             reserveLink.href = baseUrl + '&guide_id=' + guideId + '&cantidad=' + count;
             updatePriceSummary();
         }
 
-        // Modal: Servicios del guía
         document.addEventListener('DOMContentLoaded', function() {
             const quantityInput = document.getElementById('personas_count');
             if (quantityInput) {
@@ -328,7 +291,6 @@ $resenas = [
             guideInputs.forEach(input => input.addEventListener('change', updateReserveLink));
             updateReserveLink();
 
-            // Modal handlers
             const guideInfoBtn = document.getElementById('guide-info-btn');
             const guideModal = document.getElementById('guide-modal');
             const modalClose = document.getElementById('modal-close');
@@ -353,72 +315,4 @@ $resenas = [
                 });
             }
         });
-
-        // Google Maps: inicialización y trazado de ruta
-        function initMap() {
-            const DEST = { lat: <?= isset($tour['destino']['lat']) ? $tour['destino']['lat'] : 0 ?>, lng: <?= isset($tour['destino']['lng']) ? $tour['destino']['lng'] : 0 ?> };
-            const map = new google.maps.Map(document.getElementById('map'), {
-                center: DEST,
-                zoom: 13
-            });
-
-            const directionsService = new google.maps.DirectionsService();
-            const directionsRenderer = new google.maps.DirectionsRenderer({ map: map });
-
-            // Mostrar área cercana (círculo) y buscar hoteles/restaurantes
-            const circle = new google.maps.Circle({
-                strokeColor: '#31735a',
-                strokeOpacity: 0.3,
-                strokeWeight: 2,
-                fillColor: '#31735a',
-                fillOpacity: 0.08,
-                map: map,
-                center: DEST,
-                radius: 2000
-            });
-
-            const placesService = new google.maps.places.PlacesService(map);
-            const request = {
-                location: DEST,
-                radius: 2000,
-                type: ['lodging', 'restaurant']
-            };
-            placesService.nearbySearch(request, function(results, status) {
-                if (status === google.maps.places.PlacesServiceStatus.OK) {
-                    results.slice(0, 8).forEach(place => {
-                        if (!place.geometry || !place.geometry.location) return;
-                        new google.maps.Marker({
-                            map: map,
-                            position: place.geometry.location,
-                            title: place.name,
-                            icon: { url: 'https://maps.gstatic.com/mapfiles/place_api/icons/v1/png_71/restaurant-71.png', scaledSize: new google.maps.Size(28, 28) }
-                        });
-                    });
-                }
-            });
-
-            document.getElementById('route-btn').addEventListener('click', function() {
-                const origin = document.getElementById('origin-input').value || '';
-                if (!origin) {
-                    alert('Por favor ingresa un origen para trazar la ruta.');
-                    return;
-                }
-                directionsService.route({
-                    origin: origin,
-                    destination: DEST,
-                    travelMode: 'DRIVING'
-                }, function(response, status) {
-                    if (status === 'OK') {
-                        directionsRenderer.setDirections(response);
-                    } else {
-                        alert('No se pudo trazar la ruta: ' + status);
-                    }
-                });
-            });
-        }
     </script>
-
-    <!-- Google Maps JS (reemplaza YOUR_GOOGLE_MAPS_API_KEY por tu clave) -->
-    <script async defer src="https://maps.googleapis.com/maps/api/js?key=YOUR_GOOGLE_MAPS_API_KEY&libraries=places&callback=initMap"></script>
-</body>
-</html>

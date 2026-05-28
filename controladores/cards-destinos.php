@@ -1,10 +1,51 @@
 <?php
 // =============================================
-// DATOS DE LOS TOURS - Tumbes Tours
-// Añade nuevos tours copiando el bloque y cambiando los datos
+// DATOS DE LOS TOURS - Tumbes Tours (desde BD)
 // =============================================
 
-$tours = [
+require_once __DIR__ . '/../config/conexion.php';
+
+// Consultar paquetes desde la base de datos
+$query = "SELECT p.id_paquete, p.titulo, p.descripcion_general, p.foto_portada_url, p.precio_base,
+                 d.nombre_destino, d.tipo_destino
+          FROM paquetes p
+          INNER JOIN destinos d ON p.id_destino = d.id_destino
+          WHERE p.estado = 'Activo'
+          ORDER BY p.id_paquete";
+
+$resultado = $conexion->query($query);
+
+$tours = [];
+
+if ($resultado && $resultado->num_rows > 0) {
+    while ($row = $resultado->fetch_assoc()) {
+        // Usar imagen de BD si existe, sino usar imagen por defecto
+        $imagen = !empty($row['foto_portada_url']) ? $row['foto_portada_url'] : 'assets/fondo.jpg';
+        
+        // Si la imagen no tiene ruta completa, agregar prefijo assets/
+        if (!empty($row['foto_portada_url']) && strpos($row['foto_portada_url'], '/') === false && strpos($row['foto_portada_url'], 'http') === false) {
+            $imagen = 'assets/' . $row['foto_portada_url'];
+        }
+        
+        $tours[] = [
+            "id"             => $row['id_paquete'],
+            "categoria"      => strtolower($row['tipo_destino']),
+            "titulo"         => $row['titulo'],
+            "imagen"         => $imagen,
+            "descripcion"    => $row['descripcion_general'] ?? 'Experiencia única en Tumbes',
+            "ubicacion"      => $row['nombre_destino'],
+            "duracion"       => "1 día completo",
+            "grupo"          => "Grupo de hasta 4 personas",
+            "precio_persona" => $row['precio_base'],
+            "precio_grupo"   => $row['precio_base'] * 4,
+            "rating"         => 4
+        ];
+    }
+}
+
+// Si no hay paquetes en BD, usar datos estáticos como respaldo
+if (empty($tours)) {
+    $tours = [
     [
         "id"             => 1,
         "categoria"      => "naturaleza tumbes",
@@ -326,5 +367,6 @@ $tours = [
         "precio_grupo"   => 120,
         "rating"         => 4
     ]
-];
+    ];
+}
 ?>

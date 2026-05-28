@@ -1,52 +1,10 @@
-<?php include __DIR__ . '/../controladores/cards-destinos.php'; ?>
-
-<!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tumbes Tours | Descubre el paraíso del norte</title>
-    <meta name="description" content="Playas paradisíacas, manglares únicos y experiencias inolvidables en Tumbes te esperan.">
-    
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <link rel="stylesheet" href="../css/estyle.css">
-</head>
-<body>
-
-    <!-- HEADER -->
-    <header class="site-header">
-        <div class="site-header__brand">
-            <img src="../assets/pt.jpg" alt="Puerto Pizarro" class="site-header__logo">
-            <div class="site-header__titles">
-                <h1>Tumbes Tours</h1>
-                <p>Descubre el paraíso del norte</p>
-            </div>
-        </div>
-        
-        <nav class="site-header__nav" aria-label="Navegación principal">
-            <ul>
-                <li><a href="#paquetes">Paquetes</a></li>
-                <li class="dropdown">
-                    <a href="#" class="dropdown-toggle" id="destinos-link">Destinos <i class="fa-solid fa-chevron-down"></i></a>
-                    <ul class="dropdown-menu">
-                        <li><a href="#" class="filter-destino" data-target="corrales">Corrales</a></li>
-                        <li><a href="#" class="filter-destino" data-target="tumbes">Tumbes</a></li>
-                        <li><a href="#" class="filter-destino" data-target="punta-sal">Punta Sal</a></li>
-                        <li><a href="#" class="filter-destino" data-target="zorritos">Zorritos</a></li>
-                        <li><a href="#" class="filter-destino" data-target="todos">Ver todos</a></li>
-                    </ul>
-                </li>
-                <li><a href="#sobre-nosotros">Sobre Nosotros</a></li>
-                <li><a href="#contacto">Contacto</a></li>
-            </ul>
-        </nav>
-        
-        <button class="btn btn--outline" onclick="window.location.href='../views/login.php'">
-            <i class="fa-solid fa-arrow-right-to-bracket"></i> Login
-        </button>
-    </header>
-
-    <main>
+<?php 
+session_start();
+$page_title = 'Tumbes Tours | Descubre el paraíso del norte';
+$page_description = 'Playas paradisíacas, manglares únicos y experiencias inolvidables en Tumbes te esperan.';
+include __DIR__ . '/controladores/cards-destinos.php'; 
+include __DIR__ . '/includes/header.php';
+?>
         <!-- HERO -->
         <section class="hero" aria-labelledby="hero-title">
             <div class="hero-overlay"></div>
@@ -138,8 +96,6 @@
             </div>
         </section>
 
-        <!-- Aquí puedes pegar el resto de tu contenido (Sobre Nosotros, Contacto, Footer) -->
-
         <!-- SOBRE NOSOTROS -->
         <section class="info-section" id="sobre-nosotros">
             <h3>Sobre Nosotros</h3>
@@ -205,6 +161,4 @@
 
     </main>
 
-    <script src="../js/main.js"></script>
-</body>
-</html>
+<?php include __DIR__ . '/includes/footer.php'; ?>
