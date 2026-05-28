@@ -3,7 +3,14 @@ session_start();
 
 // Verificar si el usuario está logueado
 if (!isset($_SESSION['user_id'])) {
-    header('Location: ../views/login.php');
+    $tour_id = isset($_POST['tour_id']) ? (int)$_POST['tour_id'] : 0;
+    $guide_id = isset($_POST['guide_id']) ? (int)$_POST['guide_id'] : 0;
+    $cantidad = isset($_POST['cantidad']) ? (int)$_POST['cantidad'] : 1;
+    $query = '';
+    if ($tour_id > 0) {
+        $query = '?tour_id=' . $tour_id . '&guide_id=' . $guide_id . '&cantidad=' . $cantidad;
+    }
+    header('Location: ../views/login.php' . $query);
     exit;
 }
 

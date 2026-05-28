@@ -16,7 +16,7 @@
     <!-- HEADER -->
     <header class="site-header">
         <div class="site-header__brand">
-            <img src="../assets/pt.jpg" alt="Puerto Pizarro" class="tour-hero__image">
+            <img src="../assets/pt.jpg" alt="Puerto Pizarro" class="site-header__logo">
             <div class="site-header__titles">
                 <h1>Tumbes Tours</h1>
                 <p>Descubre el paraíso del norte</p>
@@ -41,7 +41,7 @@
             </ul>
         </nav>
         
-        <button class="btn btn--outline">
+        <button class="btn btn--outline" onclick="window.location.href='../views/login.php'">
             <i class="fa-solid fa-arrow-right-to-bracket"></i> Login
         </button>
     </header>

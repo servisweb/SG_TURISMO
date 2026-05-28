@@ -3,7 +3,18 @@ session_start();
 
 // Verificar si el usuario está logueado
 if (!isset($_SESSION['user_id'])) {
-    header('Location: login.php');
+    $redirectQuery = [];
+    if (isset($_GET['tour_id'])) {
+        $redirectQuery[] = 'tour_id=' . (int)$_GET['tour_id'];
+    }
+    if (isset($_GET['guide_id'])) {
+        $redirectQuery[] = 'guide_id=' . (int)$_GET['guide_id'];
+    }
+    if (isset($_GET['cantidad'])) {
+        $redirectQuery[] = 'cantidad=' . (int)$_GET['cantidad'];
+    }
+    $queryString = $redirectQuery ? '?' . implode('&', $redirectQuery) : '';
+    header('Location: login.php' . $queryString);
     exit;
 }
 
