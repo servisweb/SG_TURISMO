@@ -46,7 +46,7 @@ $resenas = [
         <?php if ($tour): ?>
             <!-- HERO DEL TOUR -->
             <section class="tour-hero">
-                <img src="<?= htmlspecialchars($tour['imagen']) ?>" alt="<?= htmlspecialchars($tour['titulo']) ?>" class="tour-hero__image">
+                
                 <div class="tour-hero__overlay">
                     <div class="tour-hero__content">
                         <h1><?= htmlspecialchars($tour['titulo']) ?></h1>
@@ -85,8 +85,7 @@ $resenas = [
                                 <h3>Horario</h3>
                                 <p><?= htmlspecialchars($tour['horario_salida']) ?> - <?= htmlspecialchars($tour['horario_retorno']) ?></p>
                             </div>
-                        </div>
-                         
+                        </div>                         
 
                         <!-- QUÉ INCLUYE -->
                         <div class="tour-includes">
@@ -186,6 +185,7 @@ $resenas = [
                                                         <p class="guide-availability">Disponibilidad: <?= htmlspecialchars($guide['disponibilidad']) ?></p>
                                                     </div>
                                                 </div>
+                                    
                                             </label>
                                         <?php endforeach; ?>
                                     <?php else: ?>
@@ -193,6 +193,9 @@ $resenas = [
                                     <?php endif; ?>
                                 </div>
                             </div>
+                             <a id="reserve-link" class="btn btn--primary btn-reserve" href="../views/reservar.php?tour_id=<?= $tour['id'] ?>&guide_id=0">
+                                <i class="fa-solid fa-calendar-check"></i> Reservar Ahora
+                            </a>
 
                             <!-- Modal: Servicios Guía Privado -->
                             <div id="guide-modal" class="modal" aria-hidden="true">
@@ -213,9 +216,6 @@ $resenas = [
                     </div>
                 </div>
 
-                            <a id="reserve-link" class="btn btn--primary btn-reserve" href="../views/reservar.php?tour_id=<?= $tour['id'] ?>&guide_id=0">
-                                <i class="fa-solid fa-calendar-check"></i> Reservar Ahora
-                            </a>
 
                             <p class="booking-notice">Para completar tu reserva, necesitarás iniciar sesión o registrarte.</p>
                         </div>

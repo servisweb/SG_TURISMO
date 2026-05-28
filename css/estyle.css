@@ -227,11 +227,11 @@ address {
 }
 
 .site-header__titles h1 {
-    font-size: 30px;
+    font-size: 24px;
 }
 
 .site-header__titles p {
-    font-size: 19px;
+    font-size: 14px;
     color: #a8ceb8;
 }
 
@@ -292,13 +292,13 @@ address {
     z-index: 2; /* Pone este contenido en la capa superior, al frente */
 }
 .hero__content h2 {
-    font-size: 65px;
+    font-size: 48px;
     margin-bottom: 10px;
     text-align: center;
 }
 
 .hero__content p {
-    font-size: 18px;
+    font-size: 16px;
 }
 
 /* --- Búsqueda y Filtros --- */
@@ -362,7 +362,7 @@ address {
 
 .packages__header h3 {
     text-align: center;
-    font-size: 42px;
+    font-size: 32px;
     margin-bottom: 50px;
     color: #111;
 }
@@ -451,7 +451,7 @@ address {
 }
 
 .package-card__body h4 {
-    font-size: 22px;
+    font-size: 18px;
     margin-bottom: 12px;
     font-weight: 700;
 }
@@ -468,7 +468,7 @@ address {
 }
 
 .package-card__description {
-    font-size: 14px;
+    font-size: 13px;
     color: var(--color-text-muted);
     text-align: center;
 }
@@ -488,7 +488,7 @@ address {
 
 .title-merriweather {
     font-family: var(--font-heading);
-    font-size: 38px;
+    font-size: 30px;
     color: #111;
     font-weight: 700;
 }
@@ -513,7 +513,7 @@ address {
 
 .info-section h3 {
     font-family: var(--font-heading);
-    font-size: 42px;
+    font-size: 32px;
     margin-bottom: 30px;
     color: #111;
 }
@@ -740,14 +740,14 @@ address {
 
 
 .tour-hero__content h1 {
-    font-size: 48px;
+    font-size: 36px;
     margin-bottom: 15px;
     font-family: var(--font-heading);
     font-weight: 700;
 }
 
 .tour-hero__content p {
-    font-size: 20px;
+    font-size: 16px;
     opacity: 0.95;
 }
 
@@ -768,11 +768,11 @@ address {
     padding: 40px;
     border-radius: 12px;
     box-shadow: 0 4px 20px rgba(0,0,0,0.1);
-    margin-top: 40px;
+    margin-top: 120px;
 }
 
 .tour-details__main h2 {
-    font-size: 32px;
+    font-size: 26px;
     margin-bottom: 20px;
     color: #111;
     font-family: var(--font-heading);
@@ -866,6 +866,7 @@ address {
     position: sticky;
     top: 20px;
     height: fit-content;
+    margin-top: 120px;
 }
 
 .tour-booking-card {
@@ -944,7 +945,7 @@ address {
 }
 
 .price-amount {
-    font-size: 28px;
+    font-size: 24px;
     font-weight: 700;
     color: #31735a;
 }
@@ -1050,7 +1051,7 @@ address {
     margin-top: 10px;
 }
 
-..booking-notice {
+.booking-notice {
     font-size: 13px;
     color: #999;
     text-align: center;
@@ -1318,4 +1319,9 @@ address {
         padding: 20px;
         gap: 40px;
     }
+}
+
+/* Reducción global no invasiva del tamaño de letra */
+html {
+    font-size: 14px; /* reduce ligeramente el tamaño base (antes era 16px por defecto) */
 }
