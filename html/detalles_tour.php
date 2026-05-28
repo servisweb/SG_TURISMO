@@ -52,6 +52,7 @@ $resenas = [
                         <h1><?= htmlspecialchars($tour['titulo']) ?></h1>
                         <p><?= htmlspecialchars($tour['descripcion']) ?></p>
                     </div>
+                </div>
             </section>
 
             <!-- CONTENIDO PRINCIPAL -->
@@ -220,8 +221,6 @@ $resenas = [
                         </div>
                     </aside>
                 </div>
-            </section>
-
             </section>
 
         <?php else: ?>
