@@ -46,7 +46,7 @@ $resenas = [
         <?php if ($tour): ?>
             <!-- HERO DEL TOUR -->
             <section class="tour-hero">
-                <img src="<?= htmlspecialchars($tour['imagen']) ?>" alt="<?= htmlspecialchars($tour['titulo']) ?>" class="tour-hero__image">
+                
                 <div class="tour-hero__overlay">
                     <div class="tour-hero__content">
                         <h1><?= htmlspecialchars($tour['titulo']) ?></h1>
@@ -84,8 +84,7 @@ $resenas = [
                                 <h3>Horario</h3>
                                 <p><?= htmlspecialchars($tour['horario_salida']) ?> - <?= htmlspecialchars($tour['horario_retorno']) ?></p>
                             </div>
-                        </div>
-                         
+                        </div>                         
 
                         <!-- QUÉ INCLUYE -->
                         <div class="tour-includes">

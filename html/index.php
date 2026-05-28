@@ -16,7 +16,7 @@
     <!-- HEADER -->
     <header class="site-header">
         <div class="site-header__brand">
-            <img src="https://via.placeholder.com/50" alt="Logotipo de Tumbes Tours" class="site-header__logo">
+            <img src="../assets/pt.jpg" alt="Puerto Pizarro" class="tour-hero__image">
             <div class="site-header__titles">
                 <h1>Tumbes Tours</h1>
                 <p>Descubre el paraíso del norte</p>
