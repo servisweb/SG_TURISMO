@@ -107,6 +107,16 @@ if ($result_reservas && $result_reservas->num_rows > 0) {
             z-index: 1000;
             box-shadow: 4px 0 10px rgba(0,0,0,0.1);
         }
+.sidebar {
+    overflow-y: auto;
+    scrollbar-width: none; /* Firefox */
+}
+
+.sidebar::-webkit-scrollbar {
+    display: none; /* Chrome, Edge, Safari */
+}
+
+
 
         .sidebar-header {
             padding: 0 20px 30px;
