@@ -5,7 +5,7 @@ document.addEventListener('DOMContentLoaded', () => {
             titulo: "Santuario Nacional Los Manglares",
             ubicacion: "Zarumilla / Puerto Pizarro",
             precio: 70.00,
-            imagen: "../assets/manglares.jpg",
+            imagen: "assets/manglares.jpg",
             descripcion: "Un ecosistema magnífico de bosques flotantes donde el agua dulce de los ríos se mezcla con el océano. Hogar de las famosas conchas negras.",
             incluye: ["Paseo en bote guiado", "Chaleco salvavidas", "Visita al estero principal"]
         },
@@ -13,7 +13,7 @@ document.addEventListener('DOMContentLoaded', () => {
             titulo: "Isla de los Pájaros",
             ubicacion: "Puerto Pizarro, Tumbes",
             precio: 45.00,
-            imagen: "../assets/isla de los pajaros.jpg",
+            imagen: "assets/isla de los pajaros.jpg",
             descripcion: "El refugio perfecto de miles de aves locales y migratorias. Al atardecer, ver el regreso de las especies a los manglares es un espectáculo mágico.",
             incluye: ["Transporte marítimo ida y vuelta", "Guía especializado en avistamiento", "Prismáticos en préstamo"]
         }

@@ -1,4 +1,4 @@
-<?php include __DIR__ . '/../controladores/cards-destinos.php'; ?>
+<?php include __DIR__ . '/controladores/cards-destinos.php'; ?>
 
 <!DOCTYPE html>
 <html lang="es">
@@ -9,14 +9,14 @@
     <meta name="description" content="Playas paradisíacas, manglares únicos y experiencias inolvidables en Tumbes te esperan.">
     
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <link rel="stylesheet" href="../css/estyle.css">
+    <link rel="stylesheet" href="css/estyle.css">
 </head>
 <body>
 
     <!-- HEADER -->
     <header class="site-header">
         <div class="site-header__brand">
-            <img src="../assets/pt.jpg" alt="Puerto Pizarro" class="site-header__logo">
+            <img src="assets/pt.jpg" alt="Puerto Pizarro" class="site-header__logo">
             <div class="site-header__titles">
                 <h1>Tumbes Tours</h1>
                 <p>Descubre el paraíso del norte</p>
@@ -41,7 +41,7 @@
             </ul>
         </nav>
         
-        <button class="btn btn--outline" onclick="window.location.href='../views/login.php'">
+        <button class="btn btn--outline" onclick="window.location.href='views/login.php'">
             <i class="fa-solid fa-arrow-right-to-bracket"></i> Login
         </button>
     </header>
@@ -59,7 +59,7 @@
         <!-- BUSCADOR Y FILTROS -->
         <search class="search-section">
             <form class="search-section__form" role="search" action="#" method="GET">
-                <input type="search" placeholder="Buscar paquetes o zonas..." aria-label="Buscar paquetes">
+                <input type="search" placeholder="Buscar paquetes ..." aria-label="Buscar paquetes">
                 <select aria-label="Seleccionar duración">
                     <option value="">Duración</option>
                     <option value="1">1 Día</option>
@@ -90,7 +90,11 @@
                     </button>
                     
                     <figure class="package-card__figure">
-                        <img src="<?= htmlspecialchars($tour['imagen']) ?>" 
+                        <?php
+                            $imgPath = $tour['imagen'];
+                            $imgSrc = dirname($imgPath) . '/' . rawurlencode(basename($imgPath));
+                        ?>
+                        <img src="<?= htmlspecialchars($imgSrc) ?>" 
                             alt="<?= htmlspecialchars($tour['titulo']) ?>" loading="lazy">
                     </figure>
                     
@@ -185,7 +189,7 @@
                         </li>
                     </ul>
                     <a href="https://wa.me/51942123456?text=Hola%20Tumbes%20Tours,%20me%20gustaría%20conocer%20más%20sobre%20sus%20paquetes" 
-                       target="_blank" class="btn-whatsapp">
+                        target="_blank" class="btn-whatsapp">
                         <i class="fa-brands fa-whatsapp"></i> Contactar por WhatsApp
                     </a>
                 </div>
@@ -205,6 +209,6 @@
 
     </main>
 
-    <script src="../js/main.js"></script>
+    <script src="js/main.js"></script>
 </body>
 </html>

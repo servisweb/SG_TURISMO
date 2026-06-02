@@ -1,4 +1,5 @@
-<?php include __DIR__ . '/../controladores/detalles_tour.php'; ?>
+<?php include __DIR__ . '/controladores/detalles_tour.php'; ?>
+
 <?php
 // Reseñas simuladas para la sección de 'Reseñas de Viajeros'
 $resenas = [
@@ -15,7 +16,7 @@ $resenas = [
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><?= $tour ? htmlspecialchars($tour['titulo']) : 'Tour no encontrado' ?> | Tumbes Tours</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <link rel="stylesheet" href="../css/estyle.css">
+    <link rel="stylesheet" href="css/estyle.css">
 </head>
 <body>
 
@@ -37,7 +38,7 @@ $resenas = [
             </ul>
         </nav>
         
-        <button class="btn btn--outline" onclick="window.location.href='../views/login.php?tour_id=<?= $tour['id'] ?>'">
+        <button class="btn btn--outline" onclick="window.location.href='views/login.php?tour_id=<?= $tour['id'] ?>'">
             <i class="fa-solid fa-arrow-right-to-bracket"></i> Login
         </button>
     </header>
@@ -175,7 +176,8 @@ $resenas = [
                                             <label class="guide-card">
                                                 <input type="radio" name="guide_id" value="<?= $guide['id'] ?>" data-price="<?= number_format($guide['precio_extra'], 2, '.', '') ?>" onchange="updateReserveLink()">
                                                 <div class="guide-card__content">
-                                                    <img src="<?= htmlspecialchars($guide['foto']) ?>" alt="<?= htmlspecialchars($guide['nombre']) ?>" class="guide-card__image">
+                                                    <?php $guideFoto = $guide['foto']; $guideFotoSrc = dirname($guideFoto) . '/' . rawurlencode(basename($guideFoto)); ?>
+                                                    <img src="<?= htmlspecialchars($guideFotoSrc) ?>" alt="<?= htmlspecialchars($guide['nombre']) ?>" class="guide-card__image">
                                                     <div>
                                                         <h4><?= htmlspecialchars($guide['nombre']) ?></h4>
                                                         <p class="guide-specialty"><?= htmlspecialchars($guide['especialidad']) ?></p>
@@ -192,7 +194,7 @@ $resenas = [
                                     <?php endif; ?>
                                 </div>
                             </div>
-                             <a id="reserve-link" class="btn btn--primary btn-reserve" href="../views/reservar.php?tour_id=<?= $tour['id'] ?>&guide_id=0">
+                                                         <a id="reserve-link" class="btn btn--primary btn-reserve" href="views/reservar.php?tour_id=<?= $tour['id'] ?>&guide_id=0">
                                 <i class="fa-solid fa-calendar-check"></i> Reservar Ahora
                             </a>
 

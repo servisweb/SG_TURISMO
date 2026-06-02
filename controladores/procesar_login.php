@@ -45,6 +45,9 @@ $_SESSION['user_id'] = uniqid();
 $_SESSION['user_email'] = $email;
 $_SESSION['user_name'] = explode('@', $email)[0];
 
+// Asignar rol Admin si el email contiene la palabra admin
+$_SESSION['rol'] = stripos($email, 'admin') !== false ? 'Admin' : 'User';
+
 $redirect = '';
 if ($redirectTour > 0) {
     $redirect = '?tour_id=' . $redirectTour . '&guide_id=' . $redirectGuide . '&cantidad=' . $redirectCantidad;

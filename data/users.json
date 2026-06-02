@@ -1,0 +1,22 @@
+[
+    {
+        "id": 1,
+        "nombres": "Administrador",
+        "apellidos": "Sistema",
+        "email": "admin@tumbestours.com",
+        "telefono": "",
+        "password": "$2y$10$zFbd2ORonV5a6LuBCD5BvO72eXTQDxGIATRJczdBmpnTLmBpjajoy",
+        "role": "admin",
+        "created_at": "2026-05-28T00:00:00Z"
+    },
+    {
+        "nombres": "sara",
+        "apellidos": "sosa",
+        "email": "sara@gmail.com",
+        "telefono": "9280014111",
+        "password": "$2y$10$qI6sEfChJA.hpc4QWYR27OPt4vMiN8GDj9CasInYBoAOZaeeSGzIq",
+        "role": "user",
+        "created_at": "2026-05-28T23:29:36+02:00",
+        "id": 2
+    }
+]
