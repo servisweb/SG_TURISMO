@@ -4,14 +4,19 @@ session_start();
 $redirectTourId = isset($_GET['tour_id']) ? (int)$_GET['tour_id'] : 0;
 $redirectGuideId = isset($_GET['guide_id']) ? (int)$_GET['guide_id'] : 0;
 $redirectCantidad = isset($_GET['cantidad']) ? (int)$_GET['cantidad'] : 1;
+$returnUrl = isset($_GET['return_url']) ? $_GET['return_url'] : '';
 
-// Si ya está logueado, redirigir al tour o a reserva
+// Si ya está logueado, redirigir
 if (isset($_SESSION['user_id'])) {
-    $query = '';
-    if ($redirectTourId > 0) {
-        $query = '?tour_id=' . $redirectTourId . '&guide_id=' . $redirectGuideId . '&cantidad=' . $redirectCantidad;
+    if (!empty($returnUrl)) {
+        header('Location: ' . $returnUrl);
+    } else {
+        $query = '';
+        if ($redirectTourId > 0) {
+            $query = '?tour_id=' . $redirectTourId . '&guide_id=' . $redirectGuideId . '&cantidad=' . $redirectCantidad;
+        }
+        header('Location: ../index.php' . $query);
     }
-    header('Location: ../views/reservar.php' . $query);
     exit;
 }
 ?>
@@ -23,7 +28,7 @@ if (isset($_SESSION['user_id'])) {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login | Tumbes Tours</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <link rel="stylesheet" href="../css/estyle.css">
+    <link rel="stylesheet" href=".. /css/estyle.css">
     <style>
         .auth-container {
             display: flex;
@@ -167,7 +172,7 @@ if (isset($_SESSION['user_id'])) {
     <div class="auth-form-wrapper">
         <div class="auth-form" id="login-form">
             <div class="back-link">
-                <a href="index.php"><i class="fa-solid fa-arrow-left"></i> Volver</a>
+                <a href="../index.php"><i class="fa-solid fa-arrow-left"></i> Volver</a>
             </div>
 
             <h2>Iniciar Sesión</h2>
@@ -201,6 +206,7 @@ if (isset($_SESSION['user_id'])) {
                 <input type="hidden" name="tour_id" value="<?= $redirectTourId ?>">
                 <input type="hidden" name="guide_id" value="<?= $redirectGuideId ?>">
                 <input type="hidden" name="cantidad" value="<?= $redirectCantidad ?>">
+                <input type="hidden" name="return_url" value="<?= htmlspecialchars($returnUrl) ?>">
                 <div class="form-group">
                     <label for="email">Email</label>
                     <input type="email" id="email" name="email" required placeholder="tu@email.com">
@@ -223,7 +229,7 @@ if (isset($_SESSION['user_id'])) {
 
         <div class="auth-form" id="register-form" style="display: none;">
             <div class="back-link">
-                <a href="index.php"><i class="fa-solid fa-arrow-left"></i> Volver</a>
+                <a href="../index.php"><i class="fa-solid fa-arrow-left"></i> Volver</a>
             </div>
 
             <h2>Crear Cuenta</h2>
@@ -233,6 +239,7 @@ if (isset($_SESSION['user_id'])) {
                 <input type="hidden" name="tour_id" value="<?= $redirectTourId ?>">
                 <input type="hidden" name="guide_id" value="<?= $redirectGuideId ?>">
                 <input type="hidden" name="cantidad" value="<?= $redirectCantidad ?>">
+                <input type="hidden" name="return_url" value="<?= htmlspecialchars($returnUrl) ?>">
                 <div class="form-group">
                     <label for="nombres">Nombres</label>
                     <input type="text" id="nombres" name="nombres" required placeholder="Juan">

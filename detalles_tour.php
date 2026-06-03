@@ -1,4 +1,7 @@
-<?php include __DIR__ . '/controladores/detalles_tour.php'; ?>
+<?php
+session_start();
+include __DIR__ . '/controladores/detalles_tour.php';
+?>
 
 <?php
 // Reseñas simuladas para la sección de 'Reseñas de Viajeros'
@@ -38,9 +41,15 @@ $resenas = [
             </ul>
         </nav>
         
-        <button class="btn btn--outline" onclick="window.location.href='views/login.php?tour_id=<?= $tour['id'] ?>'">
-            <i class="fa-solid fa-arrow-right-to-bracket"></i> Login
-        </button>
+        <?php if (isset($_SESSION['user_id'])): ?>
+            <button class="btn btn--outline" onclick="window.location.href='views/reservar.php'">
+                <i class="fa-solid fa-user"></i> <?= htmlspecialchars($_SESSION['user_name']) ?>
+            </button>
+        <?php else: ?>
+            <button class="btn btn--outline" onclick="window.location.href='views/login.php?tour_id=<?= $tour['id'] ?>'">
+                <i class="fa-solid fa-arrow-right-to-bracket"></i> Login
+            </button>
+        <?php endif; ?>
     </header>
 
     <main>

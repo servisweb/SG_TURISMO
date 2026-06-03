@@ -1,4 +1,7 @@
-<?php include __DIR__ . '/controladores/cards-destinos.php'; ?>
+<?php
+session_start();
+include __DIR__ . '/controladores/cards-destinos.php';
+?>
 
 <!DOCTYPE html>
 <html lang="es">
@@ -25,9 +28,9 @@
         
         <nav class="site-header__nav" aria-label="Navegación principal">
             <ul>
-                <li><a href="#paquetes">Paquetes</a></li>
+                <li><a href="#paquetes">Destinos</a></li>
                 <li class="dropdown">
-                    <a href="#" class="dropdown-toggle" id="destinos-link">Destinos <i class="fa-solid fa-chevron-down"></i></a>
+                    <a href="#" class="dropdown-toggle" id="destinos-link">Paquetes <i class="fa-solid fa-chevron-down"></i></a>
                     <ul class="dropdown-menu">
                         <li><a href="#" class="filter-destino" data-target="corrales">Corrales</a></li>
                         <li><a href="#" class="filter-destino" data-target="tumbes">Tumbes</a></li>
@@ -41,9 +44,15 @@
             </ul>
         </nav>
         
-        <button class="btn btn--outline" onclick="window.location.href='views/login.php'">
-            <i class="fa-solid fa-arrow-right-to-bracket"></i> Login
-        </button>
+        <?php if (isset($_SESSION['user_id'])): ?>
+            <button class="btn btn--outline" onclick="window.location.href='views/reservar.php'">
+                <i class="fa-solid fa-user"></i> <?= htmlspecialchars($_SESSION['user_name']) ?>
+            </button>
+        <?php else: ?>
+            <button class="btn btn--outline" onclick="window.location.href='views/login.php'">
+                <i class="fa-solid fa-arrow-right-to-bracket"></i> Login
+            </button>
+        <?php endif; ?>
     </header>
 
     <main>
@@ -78,7 +87,7 @@
         <!-- PAQUETES DINÁMICOS -->
         <section class="packages" id="paquetes">
             <header class="packages__header text-center">
-                <h3 class="title-merriweather">Nuestros Paquetes</h3>
+                <h3 class="title-merriweather">Nuestros destinos</h3>
             </header>
             
             <div class="packages__grid">
