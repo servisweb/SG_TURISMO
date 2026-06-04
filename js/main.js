@@ -1,44 +1,88 @@
 document.addEventListener('DOMContentLoaded', () => {
-    // 1. SELECTORES
     const filterButtons = document.querySelectorAll('.btn-filter');
     const destinationLinks = document.querySelectorAll('.filter-destino');
     const packageCards = document.querySelectorAll('.package-card');
     const dropdown = document.querySelector('.dropdown');
+    const searchInput = document.querySelector('.search-section__form input[type="search"]');
+    const selectDuracion = document.getElementById('select-duracion');
 
-    // 2. FUNCIÓN MAESTRA DE FILTRADO
-    function filtrarTarjetas(valorFiltro) {
-        packageCards.forEach(card => {
-            const cardCategory = card.getAttribute('data-categoria');
-            
-            // Si el filtro es 'todos' o coincide con la categoría/destino, se muestra
-            if (valorFiltro === 'todos' || cardCategory === valorFiltro) {
-                card.style.display = 'flex';
-            } else {
-                card.style.display = 'none';
-            }
-        });
+    function coincideDuracion(card, valorDuracion) {
+        if (!valorDuracion) return true;
+        const duracion = (card.getAttribute('data-duracion') || '').toLowerCase();
+        if (valorDuracion === 'completo') {
+            return duracion.includes('completo') || duracion.includes('full') || duracion.includes('8') || duracion.includes('10') || duracion.includes('12');
+        }
+        if (valorDuracion === 'medio') {
+            return duracion.includes('medio') || duracion.includes('4') || duracion.includes('5') || duracion.includes('3');
+        }
+        return true;
     }
 
-    // 3. EVENTOS: Botones de categorías (Playa, Naturaleza, etc.)
+    function filtrarTarjetas(valorFiltro, textoBusqueda = '', valorDuracion = '') {
+        let visibles = 0;
+        packageCards.forEach(card => {
+            const categoria = card.getAttribute('data-categoria') || '';
+            const titulo = card.querySelector('h4')?.textContent.toLowerCase() || '';
+            const descripcion = card.querySelector('.package-card__description')?.textContent.toLowerCase() || '';
+            const ubicacion = card.querySelector('.tour-meta')?.textContent.toLowerCase() || '';
+
+            const coincideCategoria = valorFiltro === 'todos' || (categoria.toLowerCase().split(' ').some(cat => cat === valorFiltro));
+            const coincideBusqueda = textoBusqueda === '' ||
+                titulo.includes(textoBusqueda) ||
+                descripcion.includes(textoBusqueda) ||
+                ubicacion.includes(textoBusqueda);
+
+            const mostrar = coincideCategoria && coincideBusqueda && coincideDuracion(card, valorDuracion);
+            card.style.display = mostrar ? '' : 'none';
+            if (mostrar) visibles++;
+        });
+
+        const noRes = document.getElementById('no-resultados');
+        if (noRes) noRes.style.display = visibles === 0 ? 'block' : 'none';
+    }
+
+    function getValores() {
+        return {
+            filtro: filtroActivo,
+            busqueda: searchInput ? searchInput.value.trim().toLowerCase() : '',
+            duracion: selectDuracion ? selectDuracion.value : ''
+        };
+    }
+
+    let filtroActivo = 'todos';
+
     filterButtons.forEach(button => {
         button.addEventListener('click', () => {
             filterButtons.forEach(btn => btn.classList.remove('is-active'));
             button.classList.add('is-active');
-            filtrarTarjetas(button.getAttribute('data-filter'));
+            filtroActivo = button.getAttribute('data-filter');
+            const v = getValores();
+            filtrarTarjetas(v.filtro, v.busqueda, v.duracion);
         });
     });
 
-    // 4. EVENTOS: Menú desplegable de destinos
     destinationLinks.forEach(link => {
         link.addEventListener('click', (e) => {
             e.preventDefault();
-            filtrarTarjetas(link.getAttribute('data-target'));
+            filtroActivo = link.getAttribute('data-target');
+            const v = getValores();
+            filtrarTarjetas(v.filtro, v.busqueda, v.duracion);
         });
     });
 
-    // 5. NOTA: Ya no necesitamos JS para abrir el menú 
-    // porque usamos el :hover del CSS. 
-    // Esto evita que el menú se "atasque".
+    if (searchInput) {
+        searchInput.addEventListener('input', () => {
+            const v = getValores();
+            filtrarTarjetas(v.filtro, v.busqueda, v.duracion);
+        });
+
+        searchInput.closest('form')?.addEventListener('submit', e => e.preventDefault());
+    }
+
+    if (selectDuracion) {
+        selectDuracion.addEventListener('change', () => {
+            const v = getValores();
+            filtrarTarjetas(v.filtro, v.busqueda, v.duracion);
+        });
+    }
 });
-
-

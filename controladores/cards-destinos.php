@@ -1,330 +1,37 @@
 <?php
 // =============================================
 // DATOS DE LOS TOURS - Tumbes Tours
-// Añade nuevos tours copiando el bloque y cambiando los datos
+// Ahora se leen desde la BD tabla destinos
 // =============================================
 
-$tours = [
-    [
-        "id"             => 1,
-        "categoria"      => "naturaleza tumbes",
-        "titulo"         => "Malecón - Puerto Pizarro",
-        "imagen"         => "assets/puerto-pizarro.jpg",
-        "descripcion"    => "Explora los manglares, la Isla de los Pájaros y el zoocriadero de cocodrilos.",
-        "ubicacion"      => "Puerto Pizarro - Tumbes",
-        "duracion"       => "1 día completo (8 horas)",
-        "grupo"          => "Grupo de hasta 4 personas",
-        "precio_persona" => 65,
-        "precio_grupo"   => 260,
-        "rating"         => 4
-    ],
+require_once __DIR__ . '/../config/conexion.php';
 
-    [
-        "id"             => 2,
-        "categoria"      => "playa",
-        "titulo"         => "Balneario de Zorritos",
-        "imagen"         => "assets/zorritos.jpg",
-        "descripcion"    => "Relájate en las playas más cálidas del norte peruano y disfruta de su gastronomía.",
-        "ubicacion"      => "Zorritos, Tumbes",
-        "duracion"       => "Día completo",
-        "grupo"          => "Grupo de hasta 4 personas",
-        "precio_persona" => 120,
-        "precio_grupo"   => 480,
-        "rating"         => 4
-    ],
+// Leer tours desde la BD tabla destinos
+$result = $conexion->query('
+    SELECT id_destino, nombre_destino, tipo_destino, foto_url, descripcion,
+           provincia, distrito, precio_referencial, duracion
+    FROM destinos
+    WHERE estado = "Activo"
+    ORDER BY nombre_destino ASC
+');
 
-    [
-        "id"             => 3,
-        "categoria"      => "cultura",
-        "titulo"         => "Huaca del Sol – Cabeza de Vaca",
-        "imagen"         => "assets/huacas_del_sol.jpg",
-        "descripcion"    => "Descubre la historia preínca de Tumbes en un fascinante recorrido arqueológico.",
-        "ubicacion"      => "Corrales, Tumbes",
-        "duracion"       => "8 horas (aprox)",
-        "grupo"          => "Grupo de hasta 4 personas",
-        "precio_persona" => 120,
-        "precio_grupo"   => 480,
-        "rating"         => 4
-    ],
-
-    [
-        "id"             => 4,
-        "categoria"      => "cultura",
-        "titulo"         => "Plaza de Armas de Tumbes",
-        "imagen"         => "assets/plaza_armas.jpg",
-        "descripcion"    => "El corazón de la ciudad. Disfruta de su emblemática concha acústica con coloridos mosaicos y un ambiente ideal para pasear.",
-        "ubicacion"      => "Centro de Tumbes",
-        "duracion"       => "2 horas aprox",
-        "grupo"          => "Grupo libre",
-        "precio_persona" => 45,
-        "precio_grupo"   => 160,
-        "rating"         => 3
-    ],
-
-    [
-        "id"             => 5,
-        "categoria"      => "naturaleza",
-        "titulo"         => "Los huayacanes de Tumbes",
-        "imagen"         => "assets/Huayacanes_tumbes.jpg",
-        "descripcion"    => "Sé testigo de un espectáculo natural único. Cuando el bosque seco se viste de oro, los huayacanes florecen en una explosión de color amarillo.",
-        "ubicacion"      => "Bosque seco de Tumbes",
-        "duracion"       => "Medio día",
-        "grupo"          => "Grupo de hasta 6 personas",
-        "precio_persona" => 80,
-        "precio_grupo"   => 380,
-        "rating"         => 4
-    ],
-
-    [
-        "id"             => 6,
-        "categoria"      => "naturaleza",
-        "titulo"         => "Baños termales de Hervideros",
-        "imagen"         => "assets/Hervideros.jpg",
-        "descripcion"    => "Sumérgete en un spa natural único con propiedades medicinales y lodos volcánicos.",
-        "ubicacion"      => "Distrito de Zorritos, Tumbes",
-        "duracion"       => "Medio día",
-        "grupo"          => "Grupo de hasta 4 personas",
-        "precio_persona" => 90,
-        "precio_grupo"   => 340,
-        "rating"         => 4
-    ],
-
-    [
-        "id"             => 7,
-        "categoria"      => "naturaleza playa",
-        "titulo"         => "Avistamiento de ballenas jorobadas",
-        "imagen"         => "assets/Ballenas.jpg",
-        "descripcion"    => "Vive un encuentro inolvidable con las majestuosas ballenas jorobadas durante su temporada de migración.",
-        "ubicacion"      => "Canoas de Punta Sal, Zorritos",
-        "duracion"       => "Medio día",
-        "grupo"          => "Grupo de hasta 6 personas",
-        "precio_persona" => 150,
-        "precio_grupo"   => 720,
-        "rating"         => 5
-    ],
-
-    [
-        "id"             => 8,
-        "categoria"      => "playa",
-        "titulo"         => "Balneario la cruz",
-        "imagen"         => "assets/la cruz.jpg",
-        "descripcion"    => "Relájate en las playas más cálidas del norte peruano y disfruta de su gastronomía.",
-        "ubicacion"      => "Zorritos",
-        "duracion"       => "Día completo",
-        "grupo"          => "Grupo de hasta 4 personas",
-        "precio_persona" => 110,
-        "precio_grupo"   => 420,
-        "rating"         => 4
-    ],
-
-    [
-        "id"             => 9,
-        "categoria"      => "naturaleza",
-        "titulo"         => "Isla de los Pájaros",
-        "imagen"         => "assets/isla de los pajaros.jpg",
-        "descripcion"    => "Navega hasta este refugio natural, ideal para observar aves al atardecer.",
-        "ubicacion"      => "Puerto Pizarro, Tumbes",
-        "duracion"       => "Medio día",
-        "grupo"          => "Grupo de hasta 4 personas",
-        "precio_persona" => 75,
-        "precio_grupo"   => 280,
-        "rating"         => 5
-    ],
-
-    [
-        "id"             => 10,
-        "categoria"      => "naturaleza",
-        "titulo"         => "Manglares de Tumbes",
-        "imagen"         => "assets/manglares.jpg",
-        "descripcion"    => "Explora los manglares, la Isla de los Pájaros y el zoocriadero de cocodrilos.",
-        "ubicacion"      => "Puerto Pizarro",
-        "duracion"       => "1 día completo",
-        "grupo"          => "Grupo de hasta 4 personas",
-        "precio_persona" => 65,
-        "precio_grupo"   => 260,
-        "rating"         => 4
-    ],
-
-    [
-        "id"             => 11,
-        "categoria"      => "naturaleza",
-        "titulo"         => "Pilares de la Quebrada Fernández",
-        "imagen"         => "assets/Pilares de la Quebrada Fernández.jpg",
-        "descripcion"    => "Un oasis natural con pozas cristalinas perfectas para un chapuzón rodeado de naturaleza.",
-        "ubicacion"      => "Canoas de Punta Sal",
-        "duracion"       => "Medio día",
-        "grupo"          => "Grupo de hasta 6 personas",
-        "precio_persona" => 85,
-        "precio_grupo"   => 390,
-        "rating"         => 4
-    ],
-
-    [
-        "id"             => 12,
-        "categoria"      => "cultura",
-        "titulo"         => "Paseo Jerusalén",
-        "imagen"         => "assets/paseo jesrusales.jpg",
-        "descripcion"    => "Hermosa calle peatonal con esculturas y mosaicos que representan escenas bíblicas.",
-        "ubicacion"      => "Calle Garcilaso, Tumbes",
-        "duracion"       => "1 hora aprox",
-        "grupo"          => "Grupo libre",
-        "precio_persona" => 40,
-        "precio_grupo"   => 140,
-        "rating"         => 4
-    ],
-
-    [
-        "id"             => 13,
-        "categoria"      => "naturaleza",
-        "titulo"         => "Parque Nacional Cerros de Amotape",
-        "imagen"         => "assets/parque nacional cerros de amotape.jpg",
-        "descripcion"    => "Senderismo, historia y paisaje del bosque seco en uno de los parques más importantes del norte.",
-        "ubicacion"      => "Rica Playa / Cerros de Amotape",
-        "duracion"       => "1 día",
-        "grupo"          => "Grupo de hasta 6 personas",
-        "precio_persona" => 130,
-        "precio_grupo"   => 520,
-        "rating"         => 5
-    ],
-
-    [
-        "id"             => 14,
-        "categoria"      => "playa",
-        "titulo"         => "Playa Acapulco",
-        "imagen"         => "assets/Acapulco.jpg",
-        "descripcion"    => "Una pintoresca y tranquila caleta de pescadores ideal para mariscos frescos.",
-        "ubicacion"      => "Distrito de Zorritos",
-        "duracion"       => "Día completo",
-        "grupo"          => "Grupo de hasta 4 personas",
-        "precio_persona" => 100,
-        "precio_grupo"   => 380,
-        "rating"         => 3
-    ],
-
-    [
-        "id"             => 15,
-        "categoria"      => "playa",
-        "titulo"         => "Isla Hueso de ballena",
-        "imagen"         => "assets/hueso de ballena.jpg",
-        "descripcion"    => "Relájate en hamacas frente al agua y disfruta de ceviche de conchas negras.",
-        "ubicacion"      => "Estero de Puerto Pizarro",
-        "duracion"       => "Medio día",
-        "grupo"          => "Grupo de hasta 4 personas",
-        "precio_persona" => 70,
-        "precio_grupo"   => 260,
-        "rating"         => 4
-    ],
-
-    [
-        "id"             => 16,
-        "categoria"      => "naturaleza",
-        "titulo"         => "Zoocriadero de Cocodrilos",
-        "imagen"         => "assets/cocodrilo.jpg",
-        "descripcion"    => "Conoce de cerca a los cocodrilos americanos en su entorno controlado.",
-        "ubicacion"      => "Puerto Pizarro, Tumbes",
-        "duracion"       => "2 horas aprox",
-        "grupo"          => "Grupo de hasta 4 personas",
-        "precio_persona" => 50,
-        "precio_grupo"   => 180,
-        "rating"         => 4
-    ],
-
-    [
-        "id"             => 17,
-        "categoria"      => "playa",
-        "titulo"         => "Playa Bocapan",
-        "imagen"         => "assets/playa-bocapan-zorritos.jpg",
-        "descripcion"    => "Extensa franja de arena dorada ideal para combinar con baños de lodo.",
-        "ubicacion"      => "Distrito de Zorritos",
-        "duracion"       => "Día completo",
-        "grupo"          => "Grupo de hasta 4 personas",
-        "precio_persona" => 95,
-        "precio_grupo"   => 360,
-        "rating"         => 4
-    ],
-
-    [
-        "id"             => 18,
-        "categoria"      => "playa",
-        "titulo"         => "Playa Los Pinos",
-        "imagen"         => "assets/playa los pinos.jpg",
-        "descripcion"    => "Playa poco concurrida con árboles que ofrecen sombra natural, ideal para acampar.",
-        "ubicacion"      => "Sur de Zorritos",
-        "duracion"       => "Día completo",
-        "grupo"          => "Grupo de hasta 4 personas",
-        "precio_persona" => 85,
-        "precio_grupo"   => 320,
-        "rating"         => 4
-    ],
-
-    [
-        "id"             => 19,
-        "categoria"      => "cultura",
-        "titulo"         => "Plazuela Bolognesi",
-        "imagen"         => "assets/bolognesi.jpg",
-        "descripcion"    => "Espacio cívico rodeado de palmeras dedicado al héroe nacional Francisco Bolognesi.",
-        "ubicacion"      => "Calle Francisco Navarrete, Tumbes",
-        "duracion"       => "1 hora aprox",
-        "grupo"          => "Grupo libre",
-        "precio_persona" => 35,
-        "precio_grupo"   => 120,
-        "rating"         => 4
-    ],
-
-    [
-        "id"             => 20,
-        "categoria"      => "playa",
-        "titulo"         => "Balneario de Cancas Tumbes",
-        "imagen"         => "assets/cancas.jpg",
-        "descripcion"    => "Pintoresco pueblo de pescadores ideal para comprar artesanías y probar pesca fresca.",
-        "ubicacion"      => "Canoas de Punta Sal",
-        "duracion"       => "Día completo",
-        "grupo"          => "Grupo de hasta 4 personas",
-        "precio_persona" => 105,
-        "precio_grupo"   => 400,
-        "rating"         => 3
-    ],
-
-    [
-        "id"             => 21,
-        "categoria"      => "cultura",
-        "titulo"         => "Parque del Beso",
-        "imagen"         => "assets/parque del beso.jpg",
-        "descripcion"    => "Hermoso mirador a orillas del río Tumbes, ideal para pasear y disfrutar la brisa.",
-        "ubicacion"      => "Malecón Tercer Milenio, Tumbes",
-        "duracion"       => "1 hora aprox",
-        "grupo"          => "Grupo libre",
-        "precio_persona" => 40,
-        "precio_grupo"   => 140,
-        "rating"         => 4
-    ],
-
-    [
-        "id"             => 22,
-        "categoria"      => "cultura",
-        "titulo"         => "Frontera Perú-Ecuador",
-        "imagen"         => "assets/frontera.jpg",
-        "descripcion"    => "Explora el dinámico mercado binacional entre Perú y Ecuador.",
-        "ubicacion"      => "Aguas Verdes, Zarumilla",
-        "duracion"       => "Medio día",
-        "grupo"          => "Grupo de hasta 4 personas",
-        "precio_persona" => 60,
-        "precio_grupo"   => 220,
-        "rating"         => 3
-    ],
-
-    [
-        "id"             => 23,
-        "categoria"      => "cultura",
-        "titulo"         => "Boulevard de la Madre",
-        "imagen"         => "assets/madre.jpg",
-        "descripcion"    => "Espacio peatonal dedicado a la madre tumbesina con jardines y monumento central.",
-        "ubicacion"      => "Centro de Tumbes",
-        "duracion"       => "1 hora aprox",
-        "grupo"          => "Grupo libre",
-        "precio_persona" => 35,
-        "precio_grupo"   => 120,
-        "rating"         => 4
-    ]
-];
+$tours = [];
+if ($result) {
+    while ($row = $result->fetch_assoc()) {
+        $precio = (float)($row['precio_referencial'] ?? 0);
+        $tours[] = [
+            "id"             => (int)$row['id_destino'],
+            "categoria"      => $row['tipo_destino'] ?? 'Mixto',
+            "titulo"         => $row['nombre_destino'],
+            "imagen"         => $row['foto_url'] ?? '',
+            "descripcion"    => $row['descripcion'] ?? '',
+            "ubicacion"      => trim(($row['provincia'] ?? 'Tumbes') . ' ' . ($row['distrito'] ?? '')),
+            "duracion"       => $row['duracion'] ?: 'Día completo',
+            "grupo"          => 'Grupo de hasta 4 personas',
+            "precio_persona" => $precio,
+            "precio_grupo"   => round($precio * 4 * 0.9, 2),
+            "rating"         => 4
+        ];
+    }
+}
 ?>

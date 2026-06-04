@@ -181,11 +181,14 @@ if (isset($_SESSION['user_id'])) {
             <?php if (isset($_GET['error'])): ?>
                 <div class="error-message">
                     <?php
-                    $error = htmlspecialchars($_GET['error']);
-                    if ($error == 'invalid') {
-                        echo "Email o contraseña incorrectos.";
-                    } elseif ($error == 'not_found') {
-                        echo "La cuenta no existe. Por favor, regístrate.";
+                    switch ($_GET['error']) {
+                        case 'invalid':       echo 'Email o contraseña incorrectos.'; break;
+                        case 'not_found':     echo 'No existe una cuenta con ese email. Regístrate primero.'; break;
+                        case 'inactive':      echo 'Tu cuenta está inactiva. Contacta al administrador.'; break;
+                        case 'empty':         echo 'Por favor completa todos los campos.'; break;
+                        case 'invalid_email': echo 'El formato del email no es válido.'; break;
+                        case 'session_expired': echo 'Tu sesión expiró. Por favor inicia sesión de nuevo.'; break;
+                        default:              echo 'Ocurrió un error. Intenta de nuevo.'; break;
                     }
                     ?>
                 </div>
@@ -235,6 +238,20 @@ if (isset($_SESSION['user_id'])) {
             <h2>Crear Cuenta</h2>
             <p>Únete a Tumbes Tours</p>
 
+            <?php
+            $regErrors = [
+                'empty'            => 'Completa todos los campos obligatorios.',
+                'invalid_email'    => 'El formato del email no es válido.',
+                'password_mismatch'=> 'Las contraseñas no coinciden.',
+                'password_short'   => 'La contraseña debe tener al menos 6 caracteres.',
+                'email_exists'     => 'Ya existe una cuenta con ese email. Inicia sesión.',
+                'register_failed'  => 'No se pudo completar el registro. Intenta de nuevo.',
+            ];
+            $errKey = $_GET['error'] ?? '';
+            if (isset($regErrors[$errKey])): ?>
+                <div class="error-message"><?= $regErrors[$errKey] ?></div>
+            <?php endif; ?>
+
             <form action="../controladores/procesar_registro.php" method="POST">
                 <input type="hidden" name="tour_id" value="<?= $redirectTourId ?>">
                 <input type="hidden" name="guide_id" value="<?= $redirectGuideId ?>">
@@ -283,17 +300,25 @@ if (isset($_SESSION['user_id'])) {
 </div>
 
 <script>
+    const regErrors = ['empty','invalid_email','password_mismatch','password_short','email_exists','register_failed'];
+    const urlError  = new URLSearchParams(window.location.search).get('error') || '';
+
     function toggleForms() {
-        const loginForm = document.getElementById('login-form');
+        const loginForm    = document.getElementById('login-form');
         const registerForm = document.getElementById('register-form');
-        
         if (loginForm.style.display === 'none') {
-            loginForm.style.display = 'block';
+            loginForm.style.display    = 'block';
             registerForm.style.display = 'none';
         } else {
-            loginForm.style.display = 'none';
+            loginForm.style.display    = 'none';
             registerForm.style.display = 'block';
         }
+    }
+
+    // Abrir registro automáticamente si el error es del registro
+    if (regErrors.includes(urlError)) {
+        document.getElementById('login-form').style.display    = 'none';
+        document.getElementById('register-form').style.display = 'block';
     }
 </script>
 

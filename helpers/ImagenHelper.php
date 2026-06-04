@@ -89,15 +89,24 @@ class ImagenHelper
         int $maxAncho,
         int $maxAlto
     ): bool {
+        // Verificar si GD está disponible y las funciones necesarias existen
+        if (!extension_loaded('gd')) {
+            // Si GD no está disponible, copiar archivo sin redimensionar
+            return @copy($origen, $destino);
+        }
+
         // Cargar imagen según tipo
         $imgOrigen = match($mime) {
-            'image/jpeg' => imagecreatefromjpeg($origen),
-            'image/png'  => imagecreatefrompng($origen),
-            'image/webp' => imagecreatefromwebp($origen),
+            'image/jpeg' => @imagecreatefromjpeg($origen),
+            'image/png'  => @imagecreatefrompng($origen),
+            'image/webp' => @imagecreatefromwebp($origen),
             default      => false
         };
 
-        if (!$imgOrigen) return false;
+        if (!$imgOrigen) {
+            // Si falla al cargar la imagen, copiar archivo sin redimensionar
+            return @copy($origen, $destino);
+        }
 
         $anchoOrig = imagesx($imgOrigen);
         $altoOrig  = imagesy($imgOrigen);
@@ -122,15 +131,19 @@ class ImagenHelper
             $nuevoAncho, $nuevoAlto, $anchoOrig, $altoOrig);
 
         // Guardar según tipo
-        $ok = match($mime) {
-            'image/jpeg' => imagejpeg($imgNueva, $destino, 85),
-            'image/png'  => imagepng($imgNueva,  $destino, 7),
-            'image/webp' => imagewebp($imgNueva, $destino, 85),
-            default      => false
-        };
+        try {
+            $ok = match($mime) {
+                'image/jpeg' => @imagejpeg($imgNueva, $destino, 85),
+                'image/png'  => @imagepng($imgNueva,  $destino, 7),
+                'image/webp' => @imagewebp($imgNueva, $destino, 85),
+                default      => false
+            };
+        } catch (Throwable $e) {
+            $ok = false;
+        }
 
-        imagedestroy($imgOrigen);
-        imagedestroy($imgNueva);
+        @imagedestroy($imgOrigen);
+        @imagedestroy($imgNueva);
 
         return $ok;
     }

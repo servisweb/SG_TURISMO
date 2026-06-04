@@ -3,7 +3,7 @@ session_start();
 
 // Verificar si hay una reserva confirmada
 if (!isset($_SESSION['ultima_reserva'])) {
-    header('Location: ../html/index.php');
+    header('Location: ../index.php');
     exit;
 }
 
@@ -178,7 +178,7 @@ $precio_guia = isset($reserva['precio_guia']) ? $reserva['precio_guia'] : 0;
     <!-- HEADER -->
     <header class="site-header">
         <div class="site-header__brand">
-            <img src="https://via.placeholder.com/50" alt="Logotipo de Tumbes Tours" class="site-header__logo">
+            <img src="../assets/uploads/img/pt.jpg" alt="Logotipo de Tumbes Tours" class="site-header__logo">
             <div class="site-header__titles">
                 <h1>Tumbes Tours</h1>
                 <p>Descubre el paraíso del norte</p>
@@ -187,7 +187,7 @@ $precio_guia = isset($reserva['precio_guia']) ? $reserva['precio_guia'] : 0;
         
         <nav class="site-header__nav" aria-label="Navegación principal">
             <ul>
-                <li><a href="../html/index.php">Inicio</a></li>
+                <li><a href="../index.php">Inicio</a></li>
             </ul>
         </nav>
     </header>
@@ -247,6 +247,21 @@ $precio_guia = isset($reserva['precio_guia']) ? $reserva['precio_guia'] : 0;
                         <span class="detail-value"><?= htmlspecialchars($reserva['telefono']) ?></span>
                     </div>
 
+                    <?php if (!empty($reserva['pasajeros'])): ?>
+                    <div class="detail-row" style="flex-direction:column; align-items:flex-start; gap:8px;">
+                        <span class="detail-label">Pasajeros:</span>
+                        <?php foreach ($reserva['pasajeros'] as $i => $p): ?>
+                        <div style="background:#fff;border:1px solid #ddd;border-radius:6px;padding:10px;width:100%;box-sizing:border-box;">
+                            <strong><?= $i+1 ?>. <?= htmlspecialchars($p['nombres']) ?></strong>
+                            &nbsp;·&nbsp; <?= htmlspecialchars($p['tipo_doc']) ?>: <?= htmlspecialchars($p['num_doc']) ?>
+                            <?php if (!empty($p['emergencia_nombre'])): ?>
+                            <br><small style="color:#666;">Emergencia: <?= htmlspecialchars($p['emergencia_nombre']) ?> <?= htmlspecialchars($p['emergencia_tel']) ?></small>
+                            <?php endif; ?>
+                        </div>
+                        <?php endforeach; ?>
+                    </div>
+                    <?php endif; ?>
+
                     <div class="detail-row" style="border-bottom: 2px solid #31735a; padding-top: 15px; margin-top: 15px;">
                         <span class="detail-label" style="font-size: 18px;">Total a Pagar:</span>
                         <span class="detail-value" style="font-size: 18px; color: #31735a;">S/. <?= number_format($reserva['total'], 2) ?></span>
@@ -267,7 +282,7 @@ $precio_guia = isset($reserva['precio_guia']) ? $reserva['precio_guia'] : 0;
                     <button class="btn-confirmation btn-primary-conf" onclick="descargarRecibo()">
                         <i class="fa-solid fa-download"></i> Descargar Recibo
                     </button>
-                    <button class="btn-confirmation btn-secondary-conf" onclick="window.location.href='../html/index.php'">
+                    <button class="btn-confirmation btn-secondary-conf" onclick="window.location.href='../index.php'">
                         <i class="fa-solid fa-home"></i> Volver al Inicio
                     </button>
                 </div>

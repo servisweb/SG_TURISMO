@@ -19,7 +19,7 @@ include __DIR__ . '/controladores/cards-destinos.php';
     <!-- HEADER -->
     <header class="site-header">
         <div class="site-header__brand">
-            <img src="assets/pt.jpg" alt="Puerto Pizarro" class="site-header__logo">
+            <img src="assets/uploads/img/pt.jpg" alt="Puerto Pizarro" class="site-header__logo">
             <div class="site-header__titles">
                 <h1>Tumbes Tours</h1>
                 <p>Descubre el paraíso del norte</p>
@@ -45,7 +45,7 @@ include __DIR__ . '/controladores/cards-destinos.php';
         </nav>
         
         <?php if (isset($_SESSION['user_id'])): ?>
-            <a class="btn btn--outline" href="views/reservar.php">
+            <a class="btn btn--outline" href="views/user/perfil_user.php">
                 <i class="fa-solid fa-user"></i> <?= htmlspecialchars($_SESSION['user_name']) ?>
             </a>
         <?php else: ?>
@@ -69,10 +69,10 @@ include __DIR__ . '/controladores/cards-destinos.php';
         <search class="search-section">
             <form class="search-section__form" role="search" action="#" method="GET">
                 <input type="search" placeholder="Buscar paquetes ..." aria-label="Buscar paquetes">
-                <select aria-label="Seleccionar duración">
+                <select aria-label="Seleccionar duración" id="select-duracion">
                     <option value="">Duración</option>
-                    <option value="1">1 Día</option>
-                    <option value="2">2 a 3 Días</option>
+                    <option value="medio">Medio día (hasta 5h)</option>
+                    <option value="completo">Día completo (6h+)</option>
                 </select>
             </form>
             
@@ -90,10 +90,15 @@ include __DIR__ . '/controladores/cards-destinos.php';
                 <h3 class="title-merriweather">Nuestros destinos</h3>
             </header>
             
-            <div class="packages__grid">
-                
+            <div class="packages__grid" id="packages-grid">
+
+                <div id="no-resultados" style="display:none; grid-column:1/-1; text-align:center; padding:60px 20px; color:#777;">
+                    <i class="fa-solid fa-magnifying-glass" style="font-size:40px; margin-bottom:16px; display:block; opacity:0.3;"></i>
+                    <p style="font-size:16px;">No se encontraron destinos con ese criterio.</p>
+                </div>
+
                 <?php foreach ($tours as $tour): ?>
-                <article class="package-card" data-categoria="<?= htmlspecialchars($tour['categoria']) ?>">
+                <article class="package-card" data-categoria="<?= htmlspecialchars($tour['categoria']) ?>" data-duracion="<?= htmlspecialchars($tour['duracion']) ?>">
                     <button class="package-card__favorite">
                         <i class="fa-regular fa-heart"></i>
                     </button>
@@ -101,7 +106,7 @@ include __DIR__ . '/controladores/cards-destinos.php';
                     <figure class="package-card__figure">
                         <?php
                             $imgPath = $tour['imagen'];
-                            $imgSrc = dirname($imgPath) . '/' . rawurlencode(basename($imgPath));
+                            $imgSrc = $imgPath ? 'assets/uploads/' . $imgPath : 'assets/uploads/img/fondo.jpg';
                         ?>
                         <img src="<?= htmlspecialchars($imgSrc) ?>" 
                             alt="<?= htmlspecialchars($tour['titulo']) ?>" loading="lazy">
@@ -205,12 +210,15 @@ include __DIR__ . '/controladores/cards-destinos.php';
                 
                 <div class="contact-form-container">
                     <h4>Envíanos tu consulta</h4>
-                    <form class="contact-form">
-                        <input type="text" placeholder="Tu nombre" required>
-                        <input type="email" placeholder="Tu correo electrónico" required>
-                        <input type="tel" placeholder="Tu teléfono" required>
-                        <textarea placeholder="Tu mensaje o consulta..." rows="5" required></textarea>
-                        <button type="submit" class="btn btn--primary">Enviar Consulta</button>
+                    <div id="contacto-msg" style="display:none;padding:12px 16px;border-radius:8px;margin-bottom:14px;font-weight:600;"></div>
+                    <form class="contact-form" id="contact-form">
+                        <input type="text" name="nombre" placeholder="Tu nombre" required>
+                        <input type="email" name="email" placeholder="Tu correo electrónico" required>
+                        <input type="tel" name="telefono" placeholder="Tu teléfono">
+                        <textarea name="mensaje" placeholder="Tu mensaje o consulta..." rows="5" required></textarea>
+                        <button type="submit" class="btn btn--primary" id="btn-contacto">
+                            <i class="fa-solid fa-paper-plane"></i> Enviar Consulta
+                        </button>
                     </form>
                 </div>
             </div>
@@ -218,6 +226,45 @@ include __DIR__ . '/controladores/cards-destinos.php';
 
     </main>
 
+    <footer class="site-footer">
+        <p>&copy; 2026 Tumbes Tours. Todos los derechos reservados.</p>
+        <div class="footer-social">
+            <i class="fa-brands fa-facebook"></i>
+            <i class="fa-brands fa-instagram"></i>
+            <i class="fa-brands fa-whatsapp"></i>
+        </div>
+    </footer>
+
     <script src="js/main.js"></script>
+    <script>
+    document.getElementById('contact-form').addEventListener('submit', function(e) {
+        e.preventDefault();
+        const btn = document.getElementById('btn-contacto');
+        const msg = document.getElementById('contacto-msg');
+        btn.disabled = true;
+        btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Enviando...';
+        const data = new FormData(this);
+        fetch('controladores/procesar_contacto.php', { method: 'POST', body: data })
+            .then(r => r.json())
+            .then(res => {
+                msg.style.display = 'block';
+                msg.style.background = res.ok ? '#dcfce7' : '#fee2e2';
+                msg.style.color = res.ok ? '#166534' : '#991b1b';
+                msg.textContent = res.msg;
+                if (res.ok) this.reset();
+                btn.disabled = false;
+                btn.innerHTML = '<i class="fa-solid fa-paper-plane"></i> Enviar Consulta';
+                setTimeout(() => msg.style.display = 'none', 5000);
+            })
+            .catch(() => {
+                msg.style.display = 'block';
+                msg.style.background = '#fee2e2';
+                msg.style.color = '#991b1b';
+                msg.textContent = 'Error de conexión. Inténtalo de nuevo.';
+                btn.disabled = false;
+                btn.innerHTML = '<i class="fa-solid fa-paper-plane"></i> Enviar Consulta';
+            });
+    });
+    </script>
 </body>
 </html>

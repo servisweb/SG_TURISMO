@@ -27,6 +27,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['accion'])) {
     $provincia    = trim($_POST['provincia'] ?? '');
     $distrito     = trim($_POST['distrito'] ?? '');
     $descripcion  = trim($_POST['descripcion'] ?? '');
+    $desc_completa = trim($_POST['descripcion_completa'] ?? '');
+    $duracion     = trim($_POST['duracion'] ?? '');
     $precio       = (float)($_POST['precio_referencial'] ?? 0);
     $estado       = $_POST['estado'] ?? 'Activo';
     $fotoActual   = trim($_POST['foto_actual'] ?? '');
@@ -58,10 +60,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['accion'])) {
             if ($accion === 'crear') {
                 $stmt = $conexion->prepare("
                     INSERT INTO destinos
-                        (nombre_destino, tipo_destino, provincia, distrito, descripcion, foto_url, precio_referencial, estado)
-                    VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+                        (nombre_destino, tipo_destino, provincia, distrito, descripcion, descripcion_completa, duracion, foto_url, precio_referencial, estado)
+                    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
                 ");
-                $stmt->bind_param('sssssdss', $nombre, $tipo, $provincia, $distrito, $descripcion, $nuevaFoto, $precio, $estado);
+                $stmt->bind_param('sssssssdss', $nombre, $tipo, $provincia, $distrito, $descripcion, $desc_completa, $duracion, $nuevaFoto, $precio, $estado);
                 $stmt->execute();
                 $mensaje = "Destino «{$nombre}» creado correctamente.";
 
@@ -69,10 +71,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['accion'])) {
                 $stmt = $conexion->prepare("
                     UPDATE destinos
                     SET nombre_destino=?, tipo_destino=?, provincia=?, distrito=?,
-                        descripcion=?, foto_url=?, precio_referencial=?, estado=?
+                        descripcion=?, descripcion_completa=?, duracion=?, foto_url=?, precio_referencial=?, estado=?
                     WHERE id_destino=?
                 ");
-                $stmt->bind_param('sssssdssi', $nombre, $tipo, $provincia, $distrito, $descripcion, $nuevaFoto, $precio, $estado, $id);
+                $stmt->bind_param('sssssssdssi', $nombre, $tipo, $provincia, $distrito, $descripcion, $desc_completa, $duracion, $nuevaFoto, $precio, $estado, $id);
                 $stmt->execute();
                 $mensaje = "Destino actualizado correctamente.";
             }
@@ -238,8 +240,19 @@ $destinos = $conexion->query("
                 </div>
 
                 <div class="form-group">
-                    <label>Descripción</label>
+                    <label>Descripción corta (para la card)</label>
                     <textarea name="descripcion"><?= htmlspecialchars($editando['descripcion'] ?? '') ?></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label>Descripción completa (para página de detalle)</label>
+                    <textarea name="descripcion_completa" style="min-height:120px;"><?= htmlspecialchars($editando['descripcion_completa'] ?? '') ?></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label>Duración</label>
+                    <input type="text" name="duracion" placeholder="Ej: Día completo (8 horas)"
+                           value="<?= htmlspecialchars($editando['duracion'] ?? '') ?>">
                 </div>
 
                 <div class="form-group">
@@ -256,7 +269,7 @@ $destinos = $conexion->query("
 
                     <div class="img-preview-wrap">
                         <img id="img-preview"
-                             src="<?= $editando && $editando['foto_url'] ? ImagenHelper::url($editando['foto_url']) : '../../assets/pt.jpg' ?>"
+                             src="<?= $editando && $editando['foto_url'] ? '../../assets/uploads/' . $editando['foto_url'] : '../../assets/pt.jpg' ?>"
                              class="img-preview <?= $editando && $editando['foto_url'] ? 'visible' : '' ?>"
                              alt="Vista previa">
                         <button type="button" class="btn-quitar-foto" onclick="quitarFoto()">×</button>
@@ -303,7 +316,7 @@ $destinos = $conexion->query("
                     <?php foreach ($destinos as $d): ?>
                     <tr>
                         <td>
-                            <img src="<?= ImagenHelper::url($d['foto_url']) ?>"
+                            <img src="<?= $d['foto_url'] ? '../../assets/uploads/' . htmlspecialchars($d['foto_url']) : '../../assets/pt.jpg' ?>"
                                  alt="<?= htmlspecialchars($d['nombre_destino']) ?>"
                                  class="thumb">
                         </td>

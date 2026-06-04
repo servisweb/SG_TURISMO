@@ -28,7 +28,7 @@ $resenas = [
     <!-- HEADER -->
     <header class="site-header">
         <div class="site-header__brand">
-            <img src="https://via.placeholder.com/50" alt="Logotipo de Tumbes Tours" class="site-header__logo">
+            <img src="assets/uploads/img/pt.jpg" alt="Logotipo de Tumbes Tours" class="site-header__logo">
             <div class="site-header__titles">
                 <h1>Tumbes Tours</h1>
                 <p>Descubre el paraíso del norte</p>
@@ -58,7 +58,7 @@ $resenas = [
         <?php if ($tour): ?>
             <!-- HERO DEL TOUR -->
             <section class="tour-hero">
-                
+                <img src="<?= htmlspecialchars($tour['imagen']) ?>" alt="<?= htmlspecialchars($tour['titulo']) ?>" class="tour-hero__image">
                 <div class="tour-hero__overlay">
                     <div class="tour-hero__content">
                         <h1><?= htmlspecialchars($tour['titulo']) ?></h1>
@@ -187,7 +187,7 @@ $resenas = [
                                             <label class="guide-card">
                                                 <input type="radio" name="guide_id" value="<?= $guide['id'] ?>" data-price="<?= number_format($guide['precio_extra'], 2, '.', '') ?>" onchange="updateReserveLink()">
                                                 <div class="guide-card__content">
-                                                    <?php $guideFoto = $guide['foto']; $guideFotoSrc = dirname($guideFoto) . '/' . rawurlencode(basename($guideFoto)); ?>
+                                                    <?php $guideFotoSrc = $guide['foto']; ?>
                                                     <img src="<?= htmlspecialchars($guideFotoSrc) ?>" alt="<?= htmlspecialchars($guide['nombre']) ?>" class="guide-card__image">
                                                     <div>
                                                         <h4><?= htmlspecialchars($guide['nombre']) ?></h4>
