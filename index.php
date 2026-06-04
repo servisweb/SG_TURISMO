@@ -45,13 +45,13 @@ include __DIR__ . '/controladores/cards-destinos.php';
         </nav>
         
         <?php if (isset($_SESSION['user_id'])): ?>
-            <button class="btn btn--outline" onclick="window.location.href='views/reservar.php'">
+            <a class="btn btn--outline" href="views/reservar.php">
                 <i class="fa-solid fa-user"></i> <?= htmlspecialchars($_SESSION['user_name']) ?>
-            </button>
+            </a>
         <?php else: ?>
-            <button class="btn btn--outline" onclick="window.location.href='views/login.php'">
+            <a class="btn btn--outline" href="views/login.php">
                 <i class="fa-solid fa-arrow-right-to-bracket"></i> Login
-            </button>
+            </a>
         <?php endif; ?>
     </header>
 

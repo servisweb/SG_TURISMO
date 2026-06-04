@@ -1,6 +1,8 @@
 <?php
 session_start();
 include __DIR__ . '/controladores/detalles_tour.php';
+$basePath = rtrim(dirname($_SERVER['SCRIPT_NAME']), '/\\');
+$viewsPath = $basePath === '' ? 'views' : $basePath . '/views';
 ?>
 
 <?php
@@ -42,13 +44,13 @@ $resenas = [
         </nav>
         
         <?php if (isset($_SESSION['user_id'])): ?>
-            <button class="btn btn--outline" onclick="window.location.href='views/reservar.php'">
+            <a class="btn btn--outline" href="views/reservar.php">
                 <i class="fa-solid fa-user"></i> <?= htmlspecialchars($_SESSION['user_name']) ?>
-            </button>
+            </a>
         <?php else: ?>
-            <button class="btn btn--outline" onclick="window.location.href='views/login.php?tour_id=<?= $tour['id'] ?>'">
+            <a class="btn btn--outline" href="views/login.php?tour_id=<?= $tour['id'] ?>">
                 <i class="fa-solid fa-arrow-right-to-bracket"></i> Login
-            </button>
+            </a>
         <?php endif; ?>
     </header>
 
@@ -203,7 +205,7 @@ $resenas = [
                                     <?php endif; ?>
                                 </div>
                             </div>
-                                                         <a id="reserve-link" class="btn btn--primary btn-reserve" href="views/reservar.php?tour_id=<?= $tour['id'] ?>&guide_id=0">
+                                <a id="reserve-link" class="btn btn--primary btn-reserve" href="views/reservar.php?tour_id=<?= $tour['id'] ?>&guide_id=0">
                                 <i class="fa-solid fa-calendar-check"></i> Reservar Ahora
                             </a>
 
@@ -324,7 +326,8 @@ $resenas = [
 
             const guideId = getSelectedGuideId();
             const count = getPersonCount();
-            const baseUrl = '../views/reservar.php?tour_id=<?= $tour['id'] ?>';
+            const currentDir = window.location.pathname.replace(/\/[^\/]*$/, '');
+            const baseUrl = currentDir + '/views/reservar.php?tour_id=<?= $tour['id'] ?>';
             reserveLink.href = baseUrl + '&guide_id=' + guideId + '&cantidad=' + count;
             updatePriceSummary();
         }

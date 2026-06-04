@@ -28,6 +28,10 @@ $_SESSION['user_email'] = $email;
 $_SESSION['user_name']  = explode('@', $email)[0];
 $_SESSION['rol']        = stripos($email, 'admin') !== false ? 'Admin' : 'User';
 
+if ($_SESSION['rol'] === 'Admin') {
+    header('Location: ../views/admin/panel_admin.php');
+    exit;
+}
 if (!empty($returnUrl)) {
     header('Location: ' . $returnUrl);
 } elseif ($redirectTour > 0) {
