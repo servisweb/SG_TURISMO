@@ -106,11 +106,10 @@ if ($result_reservas && $result_reservas->num_rows > 0) {
             overflow-y: auto;
             z-index: 1000;
             box-shadow: 4px 0 10px rgba(0,0,0,0.1);
+            display: flex;
+            flex-direction: column;
+            scrollbar-width: none; /* Firefox */
         }
-.sidebar {
-    overflow-y: auto;
-    scrollbar-width: none; /* Firefox */
-}
 
 .sidebar::-webkit-scrollbar {
     display: none; /* Chrome, Edge, Safari */
@@ -137,6 +136,7 @@ if ($result_reservas && $result_reservas->num_rows > 0) {
 
         .sidebar-menu {
             list-style: none;
+            flex: 1;
         }
 
         .sidebar-menu li {
@@ -166,26 +166,48 @@ if ($result_reservas && $result_reservas->num_rows > 0) {
             font-size: 18px;
         }
 
+        .sidebar {
+            padding-bottom: 0;
+        }
+
         .sidebar-footer {
-            position: absolute;
-            bottom: 20px;
-            left: 20px;
-            right: 20px;
+            position: relative;
+            bottom: auto;
+            left: auto;
+            right: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            padding: 15px 20px;
+            margin-top: auto;
+            border-top: 1px solid rgba(255,255,255,0.1);
         }
 
         .sidebar-footer a {
             display: flex;
             align-items: center;
             padding: 12px;
-            background: rgba(231, 76, 60, 0.2);
             color: white;
             text-decoration: none;
             border-radius: 8px;
             transition: all 0.3s;
+            font-size: 14px;
         }
 
-        .sidebar-footer a:hover {
+        .sidebar-footer a.btn-logout {
+            background: rgba(231, 76, 60, 0.2);
+        }
+
+        .sidebar-footer a.btn-logout:hover {
             background: #e74c3c;
+        }
+
+        .sidebar-footer a.btn-website {
+            background: rgba(52, 152, 219, 0.2);
+        }
+
+        .sidebar-footer a.btn-website:hover {
+            background: #3498db;
         }
 
         .sidebar-footer a i {
@@ -483,11 +505,13 @@ if ($result_reservas && $result_reservas->num_rows > 0) {
             <li><a href="proveedores.php"><i class="fas fa-handshake"></i> Proveedores</a></li>
             <li><a href="movilidades.php"><i class="fas fa-bus"></i> Movilidades</a></li>
             <li><a href="reportes.php"><i class="fas fa-chart-bar"></i> Reportes</a></li>
-            <li><a href="../../index.php"><i class="fas fa-globe"></i> Ver Sitio Web</a></li>
         </ul>
 
         <div class="sidebar-footer">
-            <a href="../../controladores/cerrar_sesion.php">
+            <a href="../../index.php" class="btn-website">
+                <i class="fas fa-globe"></i> Ver Sitio Web
+            </a>
+            <a href="../../controladores/cerrar_sesion.php" class="btn-logout">
                 <i class="fas fa-sign-out-alt"></i> Cerrar Sesión
             </a>
         </div>

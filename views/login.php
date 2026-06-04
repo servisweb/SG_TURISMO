@@ -28,7 +28,14 @@ if (isset($_SESSION['user_id'])) {
         .auth-container {
             display: flex;
             min-height: 100vh;
-            background: linear-gradient(135deg, #31735a 0%, #236c5b 100%);
+            background: linear-gradient(
+                rgba(0,0,0,.45),
+                rgba(0,0,0,.45)
+            ),
+            url('https://images.unsplash.com/photo-1507525428034-b723cf961d3e');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
         }
 
         .auth-form-wrapper {
@@ -132,6 +139,65 @@ if (isset($_SESSION['user_id'])) {
             font-size: 14px;
         }
 
+        .forgot-password {
+            text-align: right;
+            margin-top: -15px;
+            margin-bottom: 20px;
+        }
+
+        .forgot-password a {
+            color: #31735a;
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        .forgot-password a:hover {
+            text-decoration: underline;
+        }
+
+        .separator {
+            display: flex;
+            align-items: center;
+            margin: 25px 0;
+        }
+
+        .separator::before,
+        .separator::after {
+            content: '';
+            flex: 1;
+            height: 1px;
+            background: #ddd;
+        }
+
+        .separator span {
+            margin: 0 15px;
+            color: #888;
+            font-size: 14px;
+        }
+
+        .btn-google {
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            padding: 14px;
+            border-radius: 8px;
+            text-decoration: none;
+            background: #fff;
+            border: 1px solid #ddd;
+            color: #444;
+            font-weight: 600;
+            transition: .3s;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        .btn-google:hover {
+            background: #f5f5f5;
+        }
+
         .error-message {
             background-color: #f8d7da;
             color: #721c24;
@@ -211,10 +277,23 @@ if (isset($_SESSION['user_id'])) {
                     <input type="password" id="password" name="password" required placeholder="••••••••">
                 </div>
 
+                <div class="forgot-password">
+                    <a href="#">¿Olvidaste tu contraseña?</a>
+                </div>
+
                 <button type="submit" class="btn-auth">
                     <i class="fa-solid fa-arrow-right-to-bracket"></i> Iniciar Sesión
                 </button>
             </form>
+
+            <div class="separator">
+                <span>o continúa con</span>
+            </div>
+
+           <a href="../controladores/google-login.php" class="btn-google">
+            <i class="fab fa-google"></i>
+            Iniciar sesión con Google
+            </a>
 
             <div class="auth-toggle">
                 ¿No tienes cuenta? <a href="#" onclick="toggleForms()">Regístrate aquí</a>
