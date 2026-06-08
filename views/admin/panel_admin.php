@@ -54,16 +54,24 @@ if ($result) {
 
 // Reservas pendientes de migrar
 $appReservas = [];
-$result = $conexion->query(
-    'SELECT ar.id, ar.codigo_reserva, ar.tour_id, ar.cantidad, ar.total, ar.estado, ar.fecha_creacion, '
-   . 'u.nombres, u.apellidos '
-   . 'FROM app_reservas ar '
-   . 'LEFT JOIN usuarios u ON u.id_usuario = ar.id_usuario '
-   . "WHERE ar.estado != 'Migrada' "
-   . 'ORDER BY ar.fecha_creacion DESC'
-);
-if ($result) {
-    $appReservas = $result->fetch_all(MYSQLI_ASSOC);
+try {
+    $result = $conexion->query(
+        'SELECT ar.id, ar.codigo_reserva, ar.tour_id, ar.cantidad, ar.total, ar.estado, ar.fecha_creacion, '
+       . 'u.nombres, u.apellidos '
+       . 'FROM app_reservas ar '
+       . 'LEFT JOIN usuarios u ON u.id_usuario = ar.id_usuario '
+       . "WHERE ar.estado != 'Migrada' "
+       . 'ORDER BY ar.fecha_creacion DESC'
+    );
+    if ($result) {
+        $appReservas = $result->fetch_all(MYSQLI_ASSOC);
+    }
+} catch (mysqli_sql_exception $e) {
+    // Si la tabla no existe (código 1146) o hay otro problema, evitar fatal y dejar lista vacía
+    if ($e->getCode() !== 1146) {
+        error_log('panel_admin.php app_reservas query error: ' . $e->getMessage());
+    }
+    $appReservas = [];
 }
 
 // Salidas operativas disponibles

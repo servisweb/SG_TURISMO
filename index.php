@@ -46,7 +46,7 @@ include __DIR__ . '/controladores/cards-destinos.php';
         
         <?php if (isset($_SESSION['user_id'])): ?>
             <a class="btn btn--outline" href="views/user/perfil_user.php">
-                <i class="fa-solid fa-user"></i> <?= htmlspecialchars($_SESSION['user_name']) ?>
+                <i class="fa-solid fa-user"></i> <?= htmlspecialchars($_SESSION['user_name'] ?? 'Usuario') ?>
             </a>
         <?php else: ?>
             <a class="btn btn--outline" href="views/login.php">
@@ -98,7 +98,7 @@ include __DIR__ . '/controladores/cards-destinos.php';
                 </div>
 
                 <?php foreach ($tours as $tour): ?>
-                <article class="package-card" data-categoria="<?= htmlspecialchars($tour['categoria']) ?>" data-duracion="<?= htmlspecialchars($tour['duracion']) ?>">
+                <article class="package-card" data-categoria="<?= htmlspecialchars($tour['categoria'] ?? '') ?>" data-duracion="<?= htmlspecialchars($tour['duracion'] ?? '') ?>">
                     <button class="package-card__favorite">
                         <i class="fa-regular fa-heart"></i>
                     </button>
@@ -109,12 +109,12 @@ include __DIR__ . '/controladores/cards-destinos.php';
                             $imgSrc = $imgPath ? 'assets/uploads/' . $imgPath : 'assets/uploads/img/fondo.jpg';
                         ?>
                         <img src="<?= htmlspecialchars($imgSrc) ?>" 
-                            alt="<?= htmlspecialchars($tour['titulo']) ?>" loading="lazy">
+                            alt="<?= htmlspecialchars($tour['titulo'] ?? '') ?>" loading="lazy">
                     </figure>
                     
                     <div class="package-card__body">
                         <div class="package-card__header">
-                            <h4><?= htmlspecialchars($tour['titulo']) ?></h4>
+                            <h4><?= htmlspecialchars($tour['titulo'] ?? '') ?></h4>
                             <div class="package-card__rating">
                                 <?php
                                 $full = floor($tour['rating']);
@@ -125,12 +125,12 @@ include __DIR__ . '/controladores/cards-destinos.php';
                             </div>
                         </div>
 
-                        <p class="package-card__description"><?= htmlspecialchars($tour['descripcion']) ?></p>
+                        <p class="package-card__description"><?= htmlspecialchars($tour['descripcion'] ?? '') ?></p>
 
                         <ul class="tour-meta">
-                            <li><i class="fa-solid fa-location-dot"></i> <?= htmlspecialchars($tour['ubicacion']) ?></li>
-                            <li><i class="fa-regular fa-clock"></i> <?= htmlspecialchars($tour['duracion']) ?></li>
-                            <li><i class="fa-solid fa-user-group"></i> <?= htmlspecialchars($tour['grupo']) ?></li>
+                            <li><i class="fa-solid fa-location-dot"></i> <?= htmlspecialchars($tour['ubicacion'] ?? '') ?></li>
+                            <li><i class="fa-regular fa-clock"></i> <?= htmlspecialchars($tour['duracion'] ?? '') ?></li>
+                            <li><i class="fa-solid fa-user-group"></i> <?= htmlspecialchars($tour['grupo'] ?? '') ?></li>
                         </ul>
 
                         <div class="package-pricing">

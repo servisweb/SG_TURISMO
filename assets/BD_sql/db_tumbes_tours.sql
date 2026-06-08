@@ -1,8 +1,3 @@
--- ============================================================
---  TUMBES TOURS — Base de datos v4
---  Motor: MySQL 8+ / MariaDB 10.6+
---  Codificación: utf8mb4
--- ============================================================
 
 CREATE DATABASE IF NOT EXISTS gestion_turismo_v4
   CHARACTER SET utf8mb4
@@ -57,9 +52,40 @@ CREATE TABLE usuarios (
   KEY idx_usuarios_estado (estado)
 ) ENGINE=InnoDB;
 
--- ============================================================
--- 2. PROVEEDORES
--- ============================================================
+CREATE TABLE app_reservas (
+  id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+  id_usuario BIGINT UNSIGNED NOT NULL,
+  codigo_reserva VARCHAR(80) NOT NULL,
+  tour_id INT DEFAULT NULL,
+  cantidad SMALLINT UNSIGNED NOT NULL DEFAULT 1,
+  total DECIMAL(10,2) NOT NULL DEFAULT 0.00,
+  estado ENUM('Pendiente','Pagada','Cancelada','Migrada') NOT NULL DEFAULT 'Pendiente',
+  fecha_creacion DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  fecha_salida DATETIME DEFAULT NULL,
+  guide_name VARCHAR(200) DEFAULT NULL,
+  comentarios TEXT DEFAULT NULL,
+  created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  updated_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  CONSTRAINT fk_app_reservas_usuario FOREIGN KEY (id_usuario) REFERENCES usuarios(id_usuario) ON DELETE CASCADE,
+  UNIQUE KEY uk_app_reservas_codigo (codigo_reserva),
+  KEY idx_app_reservas_usuario (id_usuario),
+  KEY idx_app_reservas_estado (estado),
+  KEY idx_app_reservas_fecha (fecha_creacion)
+) ENGINE=InnoDB;
+
+CREATE TABLE app_pasajeros (
+  id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+  id_reserva BIGINT UNSIGNED NOT NULL,
+  tipo_documento ENUM('DNI','CE','PASSPORT') NOT NULL,
+  numero_documento VARCHAR(20) NOT NULL,
+  nombres_completos VARCHAR(200) NOT NULL,
+  fecha_nacimiento DATE DEFAULT NULL,
+  contacto_emergencia_nombre VARCHAR(150) DEFAULT NULL,
+  contacto_emergencia_telefono VARCHAR(30) DEFAULT NULL,
+  created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  CONSTRAINT fk_app_pasajeros_reserva FOREIGN KEY (id_reserva) REFERENCES app_reservas(id) ON DELETE CASCADE,
+  KEY idx_app_pasajeros_reserva (id_reserva)
+) ENGINE=InnoDB;
 CREATE TABLE proveedores (
   id_proveedor          BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
   tipo_documento        ENUM('RUC','DNI') NOT NULL,

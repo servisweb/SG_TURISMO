@@ -21,11 +21,11 @@ if ($tour_id > 0) {
         $precio = (float)($row['precio_referencial'] ?? 0);
         $tour = [
             'id'                   => (int)$row['id_destino'],
-            'titulo'               => $row['nombre_destino'],
-            'categoria'            => $row['tipo_destino'],
-            'imagen'               => $row['foto_url'] ? 'assets/uploads/' . $row['foto_url'] : 'assets/uploads/img/fondo.jpg',
+            'titulo'               => $row['nombre_destino'] ?? '',
+            'categoria'            => $row['tipo_destino'] ?? '',
+            'imagen'               => ($row['foto_url'] ?? '') ? 'assets/uploads/' . $row['foto_url'] : 'assets/uploads/img/fondo.jpg',
             'descripcion'          => $row['descripcion'] ?? '',
-            'descripcion_completa' => $row['descripcion_completa'] ?: ($row['descripcion'] ?? ''),
+            'descripcion_completa' => $row['descripcion_completa'] ?? ($row['descripcion'] ?? ''),
             'ubicacion'            => trim(($row['provincia'] ?? 'Tumbes') . ', ' . ($row['distrito'] ?? '')),
             'duracion'             => 'Día completo (8 horas)',
             'grupo'                => 'Grupo de hasta 4 personas',

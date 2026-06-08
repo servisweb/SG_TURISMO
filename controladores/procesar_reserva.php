@@ -25,21 +25,36 @@ if ($tour_id <= 0 || $cantidad <= 0 || empty($fecha_salida) || empty($nombre_con
 
 $precio_unitario = 0;
 $precio_grupo    = 0;
-$tour            = null;
 
-foreach ($tours as $t) {
-    if ($t['id'] === $tour_id) {
-        $tour = $t;
-        break;
+// Obtener precios del tour desde la BD (destinos)
+if ($tour_id > 0) {
+    $stmtT = $conexion->prepare('SELECT precio_referencial FROM destinos WHERE id_destino = ? LIMIT 1');
+    if ($stmtT) {
+        $stmtT->bind_param('i', $tour_id);
+        $stmtT->execute();
+        $resT = $stmtT->get_result()->fetch_assoc();
+        $stmtT->close();
+        $precio_unitario = (float)($resT['precio_referencial'] ?? 0);
+        $precio_grupo = round($precio_unitario * 4 * 0.9, 2);
     }
 }
 
-if ($tour) {
-    $precio_unitario = isset($tour['precio_persona']) ? $tour['precio_persona'] : 0;
-    $precio_grupo    = isset($tour['precio_grupo']) ? $tour['precio_grupo'] : 0;
+$precio_guia = 0;
+// Obtener precio y nombre del guía desde la BD si se seleccionó uno
+$guide_name = null;
+if ($guide_id > 0) {
+    $stmtG = $conexion->prepare('SELECT id_guia, nombres_completos, precio_adicional FROM guias WHERE id_guia = ? LIMIT 1');
+    if ($stmtG) {
+        $stmtG->bind_param('i', $guide_id);
+        $stmtG->execute();
+        $rg = $stmtG->get_result()->fetch_assoc();
+        $stmtG->close();
+        if ($rg) {
+            $precio_guia = (float)($rg['precio_adicional'] ?? 0);
+            $guide_name = $rg['nombres_completos'];
+        }
+    }
 }
-
-$precio_guia     = isset($guias[$guide_id]) ? $guias[$guide_id]['precio_extra'] : 0;
 $groupPackages   = intdiv($cantidad, 4);
 $individualPeople= $cantidad % 4;
 $tourCost        = ($groupPackages * $precio_grupo) + ($individualPeople * $precio_unitario);
@@ -95,7 +110,7 @@ if (!$stmt) {
 
 $fecha_salida_db = date('Y-m-d', strtotime($fecha_salida));
 $estado = 'Pendiente';
-$guide_name = isset($guias[$guide_id]) ? $guias[$guide_id]['nombre'] : null;
+// $guide_name ya calculado arriba si hay guía seleccionado
 
 $stmt->bind_param(
     'siiissiissssdss',

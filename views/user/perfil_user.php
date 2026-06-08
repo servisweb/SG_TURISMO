@@ -93,30 +93,45 @@ $userPhone = htmlspecialchars($userPhone);
 
 // Reservas del usuario
 $reservas_usuario = [];
-$stmtR = $conexion->prepare(
-    'SELECT ar.codigo_reserva, ar.tour_id, ar.cantidad, ar.total, ar.estado, ar.fecha_creacion, ar.fecha_salida
-     FROM app_reservas ar WHERE ar.id_usuario = ? ORDER BY ar.fecha_creacion DESC'
-);
-if ($stmtR) {
-    $stmtR->bind_param('i', $userId);
-    $stmtR->execute();
-    $reservas_usuario = $stmtR->get_result()->fetch_all(MYSQLI_ASSOC);
-    $stmtR->close();
+// Intentar leer reservas desde la tabla `app_reservas` (si existe)
+$reservas_usuario = [];
+try {
+    $stmtR = $conexion->prepare(
+        'SELECT ar.codigo_reserva, ar.tour_id, ar.cantidad, ar.total, ar.estado, ar.fecha_creacion, ar.fecha_salida
+         FROM app_reservas ar WHERE ar.id_usuario = ? ORDER BY ar.fecha_creacion DESC'
+    );
+    if ($stmtR) {
+        $stmtR->bind_param('i', $userId);
+        $stmtR->execute();
+        $reservas_usuario = $stmtR->get_result()->fetch_all(MYSQLI_ASSOC);
+        $stmtR->close();
+    }
+} catch (mysqli_sql_exception $e) {
+    // Tabla `app_reservas` no existe o error en la consulta: evitar fatal
+    if ($e->getCode() !== 1146) {
+        error_log('perfil_user.php mysqli_sql_exception: ' . $e->getMessage());
+    }
+    $reservas_usuario = [];
 }
 // Tambien reservas oficiales migradas
-$stmtRO = $conexion->prepare(
-    'SELECT r.codigo_reserva, p.titulo as tour_nombre, r.cantidad_pasajeros as cantidad,
-            r.precio_total as total, r.estado_reserva as estado, r.fecha_creacion, NULL as fecha_salida
-     FROM reservas r
-     LEFT JOIN salidas_operativas so ON so.id_salida = r.id_salida
-     LEFT JOIN paquetes p ON p.id_paquete = so.id_paquete
-     WHERE r.id_usuario_titular = ? ORDER BY r.fecha_creacion DESC'
-);
-if ($stmtRO) {
-    $stmtRO->bind_param('i', $userId);
-    $stmtRO->execute();
-    $reservas_oficiales = $stmtRO->get_result()->fetch_all(MYSQLI_ASSOC);
-    $stmtRO->close();
+try {
+    $stmtRO = $conexion->prepare(
+        'SELECT r.codigo_reserva, p.titulo as tour_nombre, r.cantidad_pasajeros as cantidad,
+                r.precio_total as total, r.estado_reserva as estado, r.fecha_creacion, NULL as fecha_salida
+         FROM reservas r
+         LEFT JOIN salidas_operativas so ON so.id_salida = r.id_salida
+         LEFT JOIN paquetes p ON p.id_paquete = so.id_paquete
+         WHERE r.id_usuario_titular = ? ORDER BY r.fecha_creacion DESC'
+    );
+    if ($stmtRO) {
+        $stmtRO->bind_param('i', $userId);
+        $stmtRO->execute();
+        $reservas_oficiales = $stmtRO->get_result()->fetch_all(MYSQLI_ASSOC);
+        $stmtRO->close();
+    }
+} catch (mysqli_sql_exception $e) {
+    error_log('perfil_user.php reservas_oficiales mysqli_sql_exception: ' . $e->getMessage());
+    $reservas_oficiales = [];
 }
 
 $tourNames = [1=>'Malecón - Puerto Pizarro', 2=>'Balneario de Zorritos', 3=>'Huaca del Sol', 4=>'Punta Sal'];

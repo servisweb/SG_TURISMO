@@ -22,9 +22,37 @@ if (!isset($_SESSION['user_id'])) {
 // Obtener datos de los tours
 include __DIR__ . '/../controladores/detalles_tour.php';
 
-// Cargar todos los destinos activos desde la BD para el select
+// Cargar conexión y datos maestros: destinos, guías y mapa guía-tour
 require_once __DIR__ . '/../config/conexion.php';
+
+// Destinos activos
 $todos_destinos = $conexion->query('SELECT id_destino, nombre_destino, precio_referencial FROM destinos WHERE estado="Activo" ORDER BY nombre_destino ASC')->fetch_all(MYSQLI_ASSOC);
+
+// Cargar guías desde la BD (array asociativo por id)
+$guias = [];
+$resG = $conexion->query('SELECT id_guia, nombres_completos, foto_url, especialidad, experiencia_anios, idiomas, precio_adicional FROM guias WHERE estado = "Activo"');
+if ($resG) {
+    while ($g = $resG->fetch_assoc()) {
+        $guias[(int)$g['id_guia']] = [
+            'id' => (int)$g['id_guia'],
+            'nombre' => $g['nombres_completos'],
+            'foto' => $g['foto_url'] ? 'assets/uploads/' . $g['foto_url'] : 'assets/uploads/guias/guia_carlos.jpg',
+            'especialidad' => $g['especialidad'],
+            'experiencia' => ($g['experiencia_anios'] ?? 0) . ' años de experiencia',
+            'idiomas' => $g['idiomas'] ?? 'Español',
+            'precio_extra' => (float)($g['precio_adicional'] ?? 0)
+        ];
+    }
+}
+
+// Cargar el mapeo tour -> guías desde data/tour_guides.json si existe
+$tourGuidesMap = [];
+$tgFile = __DIR__ . '/../data/tour_guides.json';
+if (file_exists($tgFile)) {
+    $json = file_get_contents($tgFile);
+    $decoded = json_decode($json, true);
+    if (is_array($decoded)) $tourGuidesMap = $decoded;
+}
 
 // Obtener el tour_id si fue enviado
 $tour_id = isset($_GET['tour_id']) ? (int)$_GET['tour_id'] : 0;
@@ -246,7 +274,7 @@ $selectedQuantity = max(1, min(10, $selectedQuantity));
             </div>
 
             <div class="user-info">
-                <i class="fa-solid fa-check-circle"></i> Sesión iniciada como: <strong><?= htmlspecialchars($_SESSION['user_name']) ?></strong>
+                <i class="fa-solid fa-check-circle"></i> Sesión iniciada como: <strong><?= htmlspecialchars($_SESSION['user_name'] ?? 'Usuario') ?></strong>
             </div>
 
             <!-- INDICADOR DE PASOS -->
